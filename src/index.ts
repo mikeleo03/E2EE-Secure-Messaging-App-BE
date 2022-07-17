@@ -17,7 +17,7 @@ app.use(express.json());
 // Initialize routes
 routes(app);
 
-// SAMPLE COMMENT: Comment added
+// SAMPLE COMMENT: Comment added.
 
 const httpServer = createServer(app);
 
