@@ -5,7 +5,7 @@ How to run:
 1. Clone this repository
 2. Run `npm i` to install all required dependencies
 3. Setup the configuration in `.env` file (Example in `.env.example`)
-4. Run `npm start` to serve
+4. Run `npm run dev` to serve
 
 ## Git branching
 
