@@ -1,15 +1,16 @@
 import * as express from 'express';
 import {createServer} from 'http';
 import {Server} from 'socket.io';
-import * as config from 'config';
+import {db} from './database';
+import config from './config';
+
 import socket from './socket';
 import routes from './routes';
+import {ClientToServerEvents, ServerToClientEvents} from './socket/interface';
 
 const app = express();
 
-const host = config.get<string>('host');
-const port = config.get<number>('port');
-// const corsOrigin = config.get<string>('corsOrigin');
+console.log(config.corsOrigin);
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -27,8 +28,11 @@ const io = new Server(httpServer, {
   },
 });
 
-httpServer.listen(port, host, () => {
-  console.log(`🚀 Server is listening on http://${host}/${port}`);
+httpServer.listen(config.port, config.host, async () => {
+  // Initialize db
+  await db.initialize();
+
+  console.log(`🚀 Server is listening on http://${config.host}/${config.port}`);
 
   socket({io});
 });

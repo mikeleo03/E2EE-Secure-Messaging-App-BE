@@ -13,7 +13,12 @@
 # production
 /build
 
+
+tmp/
+temp/
+
 # misc
+.idea/
 .DS_Store
 .env
 .env.local
