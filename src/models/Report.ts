@@ -7,7 +7,7 @@ export class Report {
   id: number;
 
   @ManyToOne(() => Chat)
-  chat_id: Chat;
+  chat: Chat;
 
   @Column()
   reporter_id: number;
