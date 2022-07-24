@@ -1,25 +1,49 @@
-import {RequestHandler} from 'express';
+import {Request, RequestHandler, Response} from 'express';
 import reportsServices from '../services/reports.services';
 
-const getReports: RequestHandler = async (_, res) => {
+const getReports: RequestHandler = async (_: Request, res: Response) => {
   const topics = await reportsServices.getReports();
 
   res.json(topics);
 };
 
-const getReportById: RequestHandler = async (req, res) => {
-  const id = parseInt(req.query.id as string);
-  const reports = await reportsServices.getReportById(id);
+const getReportById: RequestHandler = async (
+  req: Request<{id: string}>,
+  res: Response
+) => {
+  const id = parseInt(req.params.id);
 
-  res.json(reports);
+  if (!isNaN(id) && id > 0) {
+    const report = await reportsServices.getReportById(id);
+
+    res.json(report);
+  } else {
+    res.json([]);
+  }
 };
 
-const createReport: RequestHandler = async (req, res) => {
+const createReport: RequestHandler = async (
+  req: Request<
+    {},
+    {},
+    {
+      chat_id: number;
+      reporter_id: number;
+      reported_id: number;
+      reason: string;
+    }
+  >,
+  res: Response
+) => {
   const body = req.body;
+  const newReport = await reportsServices.createReport(
+    body.chat_id,
+    body.reporter_id,
+    body.reported_id,
+    body.reason
+  );
 
-  console.log(body);
-
-  // res.json(report);
+  res.json(newReport);
 };
 
 export default {getReports, getReportById, createReport};

@@ -28,17 +28,17 @@ const getReportById = async (id: number) => {
   }
 };
 
-const getReport = async (
+const createReport = async (
   chat_id: number,
-  issuer_id: number,
-  issued_id: number,
+  reporter_id: number,
+  reported_id: number,
   reason: string
 ) => {
   try {
     const newReport = await reportRepository.save({
       chat_id,
-      issuer_id,
-      issued_id,
+      reporter_id,
+      reported_id,
       reason,
     });
 
@@ -49,4 +49,4 @@ const getReport = async (
   }
 };
 
-export default {getReports, getReportById, insertReport: getReport};
+export default {getReports, getReportById, createReport};
