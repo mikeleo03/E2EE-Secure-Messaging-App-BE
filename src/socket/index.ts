@@ -42,7 +42,6 @@ function socket({
       } else {
         room.setUser(socket.id);
       }
-      console.log(roomManager);
     });
 
     socket.on('revealName', () => {
@@ -57,12 +56,10 @@ function socket({
           user2: `Dummy Name 2 ${user2}`,
         });
       }
-      console.log(roomManager);
     });
 
     socket.on('disconnect', () => {
       roomManager.deleteRoom(socket.data.roomId);
-      console.log(roomManager);
     });
   });
 }

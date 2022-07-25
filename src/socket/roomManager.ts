@@ -13,6 +13,7 @@ class RoomManager {
         return this.rooms[i];
       }
     }
+    return null;
   }
 
   deleteRoom(roomId: string) {
