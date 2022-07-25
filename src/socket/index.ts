@@ -4,6 +4,8 @@ import {
   ServerToClientEvents,
   SocketData,
 } from './interface';
+import matchmakingManager from './matchmakingManager';
+import {v4 as uuidv4} from 'uuid';
 import roomManager from './roomManager';
 import Room from './room';
 
@@ -16,6 +18,34 @@ function socket({
 
   io.on('connection', socket => {
     console.log(`🟩 User connected ${socket.id}`);
+    socket.data.username = socket.handshake.auth.username;
+
+    socket.on('matchmaking', topicId => {
+      socket.join(topicId);
+
+      matchmakingManager.addToQueue(topicId, socket);
+
+      // TODO: Improve matchmaking algorithm
+      const isAbleToMatch = matchmakingManager.check(topicId);
+      if (isAbleToMatch) {
+        const {user1, user2} = matchmakingManager.match(topicId);
+        const chatroomId = uuidv4();
+
+        // Handle room manager here
+        user1.join(chatroomId);
+        user2.join(chatroomId);
+        user1.data.roomId = chatroomId;
+        user2.data.roomId = chatroomId;
+
+        const newRoom = new Room(chatroomId);
+        newRoom.setUser(user1.data.username);
+        newRoom.setUser(user2.data.username);
+
+        roomManager.addRoom(newRoom);
+
+        io.to(chatroomId).emit('matched');
+      }
+    });
 
     // Emit events
     socket.emit('noArg');
@@ -31,23 +61,12 @@ function socket({
       console.log('Hello from client');
     });
 
-    socket.on('dummyMatch', roomId => {
-      socket.join(roomId);
-      socket.data.roomId = roomId;
-      const room = roomManager.getRoom(roomId);
-      if (!room) {
-        const newRoom = new Room(roomId);
-        newRoom.setUser(socket.id);
-        roomManager.addRoom(newRoom);
-      } else {
-        room.setUser(socket.id);
-      }
-    });
-
     socket.on('revealName', () => {
+      console.log(`${socket.data.username} ask reveal`);
       const roomId = socket.data.roomId;
       const room = roomManager.getRoom(roomId);
-      room?.requestReveal(socket.id);
+      console.log(room);
+      room?.requestReveal(socket.data.username);
       if (room?.canRevealName()) {
         const user1 = room.users[0];
         const user2 = room.users[1];
