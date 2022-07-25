@@ -5,7 +5,7 @@ import {
   SocketData,
 } from './interface';
 import roomManager from './roomManager';
-import Room from './revealnameManager';
+import Room from './room';
 
 function socket({
   io,

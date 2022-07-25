@@ -1,4 +1,4 @@
-import Room from './revealnameManager';
+import Room from './room';
 
 class RoomManager {
   rooms: Room[] = [];
