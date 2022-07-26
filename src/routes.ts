@@ -1,5 +1,6 @@
 import {Express} from 'express';
 import usersController from './controllers/users.controller';
+import authController from './controllers/auth.controller';
 import topicsController from './controllers/topics.controller';
 import requestTopicsController from './controllers/request-topics.controller';
 import reportsController from './controllers/reports.controller';
@@ -10,6 +11,8 @@ const routes = (app: Express) => {
   });
 
   app.route('/user').get(usersController.getUser);
+
+  app.route('/auth').post(authController.login);
 
   app.route('/topics').get(topicsController.getTopics);
 
