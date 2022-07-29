@@ -4,6 +4,7 @@ import authController from './controllers/auth.controller';
 import topicsController from './controllers/topics.controller';
 import requestTopicsController from './controllers/request-topics.controller';
 import reportsController from './controllers/reports.controller';
+import authMiddleware from './middleware/auth.middleware';
 
 const routes = (app: Express) => {
   app.route('/').get((_, res) => {
