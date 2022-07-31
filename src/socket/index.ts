@@ -80,6 +80,13 @@ function socket({
       }
     });
 
+    socket.on('message', ({ content, to }) => {
+      socket.to(to).emit('message', {
+        content,
+        from: socket.id
+      })
+    })
+
     socket.on('disconnect', () => {
       roomManager.deleteRoom(socket.data.roomId);
     });

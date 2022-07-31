@@ -4,6 +4,7 @@ export interface ServerToClientEvents {
   withAck: (d: string, callback: (e: number) => void) => void;
   matched: () => void;
   revealName: (payload: object) => void;
+  message: (payload: {content: string; from: string}) => void;
 }
 
 export interface ClientToServerEvents {
@@ -11,6 +12,7 @@ export interface ClientToServerEvents {
   matchmaking: (topicId: string) => void;
   revealName: () => void;
   dummyMatch: (roomId: string) => void;
+  message: (payload: {content: string; to: string}) => void;
 }
 
 export interface SocketData {
