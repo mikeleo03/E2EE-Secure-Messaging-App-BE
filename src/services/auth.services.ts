@@ -15,7 +15,7 @@ const login = async (identifier: string, password: string) => {
   return response.data;
 };
 
-const validateAccount = async (token: string): Promise<boolean>  => {
+const validateAccount = async (token: string, role: string[]): Promise<boolean>  => {
   try {
     const response = await usersServices.getUserAccount(token);
 
@@ -23,7 +23,7 @@ const validateAccount = async (token: string): Promise<boolean>  => {
       throw new Error('Failed to retieve user account');
     }
 
-    return config.activeRole.includes(response.role);
+    return role.includes(response.role);
 
   } catch (error) { 
     throw error;
