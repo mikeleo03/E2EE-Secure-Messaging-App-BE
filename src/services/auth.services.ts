@@ -15,15 +15,15 @@ const login = async (identifier: string, password: string) => {
   return response.data;
 };
 
-const validateToken = async (token: string): Promise<boolean>  => {
+const validateToken = async (token: string): Promise<boolean> => {
   try {
     const response = await usersServices.getUser(token);
 
-    return response != null && typeof response != 'undefined';
-  } catch (error) { 
+    return response != null && typeof response !== 'undefined';
+  } catch (error) {
     throw error;
   }
-}
+};
 
 const getAuthHeader = (authHeader: string | string[]): string => {
   if (authHeader === null || typeof authHeader === 'undefined') {
@@ -37,10 +37,10 @@ const getAuthHeader = (authHeader: string | string[]): string => {
   }
 
   return authString.split(' ')[0];
-}
+};
 
 export default {
   login,
   validateToken,
-  getAuthHeader
+  getAuthHeader,
 };
