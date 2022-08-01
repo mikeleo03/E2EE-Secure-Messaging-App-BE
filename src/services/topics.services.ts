@@ -28,7 +28,7 @@ const updateTopicStatus = async (id: number, status: boolean) => {
   if (topic === null) {
     throw new ClientError('No topic found with ID ' + id.toString(), 404);
   }
-  topic.hotStatus = status;
+  topic.hot_status = status;
   try {
     await topicRepository.save(topic);
   } catch (error) {
@@ -40,9 +40,9 @@ const updateTopicStatus = async (id: number, status: boolean) => {
 const createTopic = async (params: {topic_name: string}) => {
   try {
     const newTopic = await topicRepository.save({
-      topicName: params.topic_name,
-      hotStatus: false,
-      createdAt: new Date(),
+      topic_name: params.topic_name,
+      hot_status: false,
+      created_at: new Date(),
     });
 
     return newTopic;

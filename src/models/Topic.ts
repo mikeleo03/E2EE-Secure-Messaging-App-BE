@@ -11,11 +11,11 @@ export class Topic {
   id: number;
 
   @Column()
-  topicName: string;
+  topic_name: string;
 
   @Column()
-  hotStatus: boolean;
+  hot_status: boolean;
 
   @CreateDateColumn({type: 'timestamptz'})
-  createdAt: Date;
+  created_at: Date;
 }
