@@ -3,10 +3,7 @@ import authServices from '../services/auth.services';
 import usersServices from '../services/users.services';
 import errorHandler from '../utils/error.handler';
 
-const getUserProfile: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
+const getUserProfile: RequestHandler = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
   const token = authServices.getAuthHeader(authHeader);
 

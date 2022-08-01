@@ -14,5 +14,6 @@ export default {
     password: process.env.DB_PASSWORD || 'test',
     database: process.env.DB_DATABASE || 'test',
   },
-  activeRole: process.env.ACTIVE_ROLE ? process.env.ACTIVE_ROLE.split(',') : []
+  activeRole: process.env.ACTIVE_ROLE ? process.env.ACTIVE_ROLE.split(',') : [],
+  adminRole: process.env.ADMIN_ROLE || 'Committee',
 };

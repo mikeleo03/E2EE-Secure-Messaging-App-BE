@@ -2,22 +2,22 @@ import axios from 'axios';
 import config from '../config';
 
 interface User {
-  username: string,
-  name: string,
-  faculty: string,
-  campus: string,
-  sex: string,
+  username: string;
+  name: string;
+  faculty: string;
+  campus: string;
+  sex: string;
 }
 
-interface UserAccount extends User{
-  role: string
+interface UserAccount extends User {
+  role: string;
 }
 
 interface UserProfile extends User {
-  provider: string,
-  confirmed: boolean,
-  blocked: boolean,
-  email: string
+  provider: string;
+  confirmed: boolean;
+  blocked: boolean;
+  email: string;
 }
 
 const mainInstance = axios.create({
@@ -28,9 +28,9 @@ const getUserAccount = async (token: string): Promise<UserAccount> => {
   try {
     const response = await mainInstance.get('/users/my-account', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'content-type': 'application/json',
-      }
+      },
     });
 
     if (response.status !== 200) {
@@ -49,21 +49,21 @@ const getUserAccount = async (token: string): Promise<UserAccount> => {
       campus: data.campus,
       sex: data.sex,
       role: data.role,
-    }
-  
+    };
+
     return account;
   } catch (error) {
     throw error;
   }
-}
+};
 
 const getUserProfile = async (token: string): Promise<UserProfile> => {
   try {
     const response = await mainInstance.get('/users/me', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'content-type': 'application/json',
-      }
+      },
     });
 
     if (response.status !== 200) {
@@ -85,8 +85,8 @@ const getUserProfile = async (token: string): Promise<UserProfile> => {
       campus: data.campus,
       faculty: data.faculty,
       email: data.email,
-    }
-  
+    };
+
     return profile;
   } catch (error) {
     throw error;
@@ -95,5 +95,5 @@ const getUserProfile = async (token: string): Promise<UserProfile> => {
 
 export default {
   getUserAccount,
-  getUserProfile
+  getUserProfile,
 };

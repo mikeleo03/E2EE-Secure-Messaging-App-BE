@@ -15,7 +15,10 @@ const login = async (identifier: string, password: string) => {
   return response.data;
 };
 
-const validateAccount = async (token: string, role: string[]): Promise<boolean>  => {
+const validateAccount = async (
+  token: string,
+  role: string[]
+): Promise<boolean> => {
   try {
     const response = await usersServices.getUserAccount(token);
 
@@ -24,11 +27,26 @@ const validateAccount = async (token: string, role: string[]): Promise<boolean> 
     }
 
     return role.includes(response.role);
-
-  } catch (error) { 
+  } catch (error) {
     throw error;
   }
-}
+};
+
+const validateAdmin = async (token: string, role: string): Promise<boolean> => {
+  try {
+    const response = await usersServices.getUserAccount(token);
+
+    console.log(response.role);
+
+    if (response === null || typeof response === 'undefined') {
+      throw new Error('Failed to retrieve user account');
+    }
+
+    return role == response.role;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const getAuthHeader = (authHeader: string | string[]): string => {
   if (authHeader === null || typeof authHeader === 'undefined') {
@@ -42,10 +60,11 @@ const getAuthHeader = (authHeader: string | string[]): string => {
   }
 
   return authString.split(' ')[0];
-}
+};
 
 export default {
   login,
   validateAccount,
-  getAuthHeader
+  validateAdmin,
+  getAuthHeader,
 };
