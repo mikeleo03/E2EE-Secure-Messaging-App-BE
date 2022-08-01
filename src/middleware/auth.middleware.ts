@@ -17,8 +17,8 @@ const authMiddleware = async (
   }
   
   try {
-    const validToken = await authServices.validateToken(token);
-    if (!validToken) {
+    const validAccount = await authServices.validateAccount(token);
+    if (!validAccount) {
       res.sendStatus(401);
       return;
     }
@@ -41,8 +41,8 @@ const authSocketMiddleware = async (
   }
   
   try {
-    const validToken = await authServices.validateToken(token);
-    if (!validToken) {
+    const validAccount = await authServices.validateAccount(token);
+    if (!validAccount) {
       next(new Error('Unauthorized'));
       return;
     }
