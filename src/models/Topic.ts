@@ -1,4 +1,9 @@
-import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Topic {
@@ -11,6 +16,6 @@ export class Topic {
   @Column()
   hotStatus: boolean;
 
-  @Column({type: 'timestamptz'})
+  @CreateDateColumn({type: 'timestamptz'})
   createdAt: Date;
 }

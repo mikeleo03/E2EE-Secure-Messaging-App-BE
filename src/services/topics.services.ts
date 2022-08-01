@@ -37,4 +37,19 @@ const updateTopicStatus = async (id: number, status: boolean) => {
   }
 };
 
-export default {getAllTopics, updateTopicStatus};
+const createTopic = async (params: {topic_name: string}) => {
+  try {
+    const newTopic = await topicRepository.save({
+      topicName: params.topic_name,
+      hotStatus: false,
+      createdAt: new Date(),
+    });
+
+    return newTopic;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+export default {getAllTopics, updateTopicStatus, createTopic};
