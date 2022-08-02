@@ -28,9 +28,9 @@ const getUserAccount = async (token: string): Promise<UserAccount> => {
   try {
     const response = await mainInstance.get('/users/my-account', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'content-type': 'application/json',
-      }
+      },
     });
 
     if (response.status !== 200) {

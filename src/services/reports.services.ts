@@ -8,14 +8,13 @@ const getReports = async () => {
     const reports = await reportRepository.find();
     return reports;
   } catch (err) {
-    console.error(err);
-    return [];
+    throw new Error('Unable to get reports');
   }
 };
 
 const getReportById = async (id: number) => {
   try {
-    const report = await reportRepository.find({
+    const report = await reportRepository.findOneOrFail({
       where: {
         id: id,
       },
@@ -23,8 +22,7 @@ const getReportById = async (id: number) => {
 
     return report;
   } catch (error) {
-    console.error(error);
-    return [];
+    throw error;
   }
 };
 
@@ -44,8 +42,7 @@ const createReport = async (
 
     return newReport;
   } catch (error) {
-    console.error(error);
-    return [];
+    throw error;
   }
 };
 
