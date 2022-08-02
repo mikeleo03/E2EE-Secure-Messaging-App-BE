@@ -12,7 +12,7 @@ export interface ClientToServerEvents {
   matchmaking: (topicId: string) => void;
   revealName: () => void;
   dummyMatch: (roomId: string) => void;
-  message: (payload: {content: string; to: string}) => void;
+  message: (payload: {content: string;}) => void;
 }
 
 export interface SocketData {

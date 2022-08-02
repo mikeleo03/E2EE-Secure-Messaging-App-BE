@@ -80,8 +80,8 @@ function socket({
       }
     });
 
-    socket.on('message', ({ content, to }) => {
-      socket.to(to).emit('message', {
+    socket.on('message', ({ content }) => {
+      socket.to(socket.data.roomId).emit('message', {
         content,
         from: socket.id
       })
