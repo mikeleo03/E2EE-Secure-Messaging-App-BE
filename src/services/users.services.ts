@@ -55,15 +55,15 @@ const getUserAccount = async (token: string): Promise<UserAccount> => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 const getUserProfile = async (token: string): Promise<UserProfile> => {
   try {
     const response = await mainInstance.get('/users/me', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'content-type': 'application/json',
-      }
+      },
     });
 
     if (response.status !== 200) {
@@ -85,8 +85,8 @@ const getUserProfile = async (token: string): Promise<UserProfile> => {
       campus: data.campus,
       faculty: data.faculty,
       email: data.email,
-    }
-  
+    };
+
     return profile;
   } catch (error) {
     throw error;
@@ -95,5 +95,5 @@ const getUserProfile = async (token: string): Promise<UserProfile> => {
 
 export default {
   getUserAccount,
-  getUserProfile
+  getUserProfile,
 };
