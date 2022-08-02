@@ -1,9 +1,10 @@
-import {Express} from 'express';
-import usersController from './controllers/users.controller';
+import { Express } from 'express';
 import authController from './controllers/auth.controller';
-import topicsController from './controllers/topics.controller';
-import requestTopicsController from './controllers/request-topics.controller';
+import historyController from './controllers/history.controller';
 import reportsController from './controllers/reports.controller';
+import requestTopicsController from './controllers/request-topics.controller';
+import topicsController from './controllers/topics.controller';
+import usersController from './controllers/users.controller';
 
 const routes = (app: Express) => {
   app.route('/').get((_, res) => {
@@ -35,6 +36,10 @@ const routes = (app: Express) => {
   app
     .route('/request-topics/:id')
     .put(requestTopicsController.updateStatusRequestTopics);
+  
+  app.route('/history/:user_id').get(historyController.getAllHistoryChat);
+  
+  app.route('/history/:user_id/:chat_id').get(historyController.getOneHistoryChat);
 };
 
 export default routes;
