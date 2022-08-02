@@ -21,8 +21,6 @@ const getReportById: RequestHandler = async (
   try {
     const id = parseInt(req.params.id);
 
-    console.log(id);
-
     if (!isNaN(id) && id > 0) {
       const report = await reportsServices.getReportById(id);
 
