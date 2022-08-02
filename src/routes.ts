@@ -5,6 +5,7 @@ import topicsController from './controllers/topics.controller';
 import requestTopicsController from './controllers/request-topics.controller';
 import reportsController from './controllers/reports.controller';
 import authMiddleware from './middleware/auth.middleware';
+import quotaController from './controllers/quota.controller';
 
 const routes = (app: Express) => {
   app.route('/').get((_, res) => {
@@ -36,6 +37,10 @@ const routes = (app: Express) => {
   app
     .route('/request-topics/:id')
     .put(requestTopicsController.updateStatusRequestTopics);
+
+  app.route('/quota/:username').get(quotaController.getUserQuota);
+
+  app.route('/quota/:username').post(quotaController.updateUserQuota);
 };
 
 export default routes;
