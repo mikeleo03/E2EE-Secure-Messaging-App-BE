@@ -11,7 +11,7 @@ const routes = (app: Express) => {
     res.send(`API server is running (${new Date()})`);
   });
 
-  app.route('/user').get(usersController.getUser);
+  app.route('/user').get(authMiddleware.authMiddleware, usersController.getUserProfile);
 
   app.route('/auth').post(authController.login);
 

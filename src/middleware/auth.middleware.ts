@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Socket } from 'socket.io';
+import config from '../config';
 import authServices from '../services/auth.services';
 import errorHandler from '../utils/error.handler';
 
@@ -17,8 +18,8 @@ const authMiddleware = async (
   }
   
   try {
-    const validToken = await authServices.validateToken(token);
-    if (!validToken) {
+    const validAccount = await authServices.validateAccount(token, config.activeRole);
+    if (!validAccount) {
       res.sendStatus(401);
       return;
     }
@@ -41,8 +42,8 @@ const authSocketMiddleware = async (
   }
   
   try {
-    const validToken = await authServices.validateToken(token);
-    if (!validToken) {
+    const validAccount = await authServices.validateAccount(token, config.activeRole);
+    if (!validAccount) {
       next(new Error('Unauthorized'));
       return;
     }
