@@ -15,11 +15,34 @@ const login = async (identifier: string, password: string) => {
   return response.data;
 };
 
-const validateToken = async (token: string): Promise<boolean> => {
+const validateAccount = async (
+  token: string,
+  role: string[]
+): Promise<boolean> => {
   try {
-    const response = await usersServices.getUser(token);
+    const response = await usersServices.getUserAccount(token);
 
-    return response != null && typeof response !== 'undefined';
+    if (response === null || typeof response === 'undefined') {
+      throw new Error('Failed to retieve user account');
+    }
+
+    return role.includes(response.role);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const validateAdmin = async (token: string, role: string): Promise<boolean> => {
+  try {
+    const response = await usersServices.getUserAccount(token);
+
+    console.log(response.role);
+
+    if (response === null || typeof response === 'undefined') {
+      throw new Error('Failed to retrieve user account');
+    }
+
+    return role == response.role;
   } catch (error) {
     throw error;
   }
@@ -41,6 +64,7 @@ const getAuthHeader = (authHeader: string | string[]): string => {
 
 export default {
   login,
-  validateToken,
+  validateAccount,
+  validateAdmin,
   getAuthHeader,
 };

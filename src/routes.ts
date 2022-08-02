@@ -5,37 +5,62 @@ import topicsController from './controllers/topics.controller';
 import requestTopicsController from './controllers/request-topics.controller';
 import reportsController from './controllers/reports.controller';
 import authMiddleware from './middleware/auth.middleware';
+import quotaController from './controllers/quota.controller';
 
 const routes = (app: Express) => {
   app.route('/').get((_, res) => {
     res.send(`API server is running (${new Date()})`);
   });
 
-  app.route('/user').get(usersController.getUser);
+  app
+    .route('/user')
+    .get(authMiddleware.authMiddleware, usersController.getUserProfile);
 
   app.route('/auth').post(authController.login);
 
-  app.route('/topics').get(topicsController.getTopics);
+  app
+    .route('/topics')
+    .get(authMiddleware.authMiddleware, topicsController.getTopics);
 
-  app.route('/reports').get(reportsController.getReports);
+  app
+    .route('/reports')
+    .get(authMiddleware.authAdminMiddleware, reportsController.getReports);
 
-  app.route('/reports/:id').get(reportsController.getReportById);
+  app
+    .route('/reports/:id')
+    .get(authMiddleware.authAdminMiddleware, reportsController.getReportById);
 
-  app.route('/reports').post(reportsController.createReport);
+  app
+    .route('/reports')
+    .post(authMiddleware.authMiddleware, reportsController.createReport);
 
-  // validate admin auth middleware
-  app.route('/request-topics').get(requestTopicsController.getRequestTopics);
-  // validate user auth middleware
   app
     .route('/request-topics')
-    .post(requestTopicsController.createRequestTopics);
+    .get(
+      authMiddleware.authAdminMiddleware,
+      requestTopicsController.getRequestTopics
+    );
 
-  // validate admin auth middleware
-  app.route('/request-topics/:id').get(requestTopicsController.getRequestTopic);
-  // validate admin auth middleware
+  app
+    .route('/request-topics')
+    .post(
+      authMiddleware.authMiddleware,
+      requestTopicsController.createRequestTopics
+    );
+
   app
     .route('/request-topics/:id')
-    .put(requestTopicsController.updateStatusRequestTopics);
+    .get(
+      authMiddleware.authAdminMiddleware,
+      requestTopicsController.getRequestTopic
+    );
+
+  app
+    .route('/request-topics/:id')
+    .put(
+      authMiddleware.authAdminMiddleware,
+      requestTopicsController.updateStatusRequestTopics
+    );
 };
 
 export default routes;
