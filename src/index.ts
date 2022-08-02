@@ -32,7 +32,7 @@ httpServer.listen(config.port, config.host, async () => {
   // Initialize db
   await db.initialize();
 
-  console.log(`🚀 Server is listening on http://${config.host}/${config.port}`);
+  console.log(`🚀 Server is listening on http://${config.host}:${config.port}`);
 
   socket({io});
 });
