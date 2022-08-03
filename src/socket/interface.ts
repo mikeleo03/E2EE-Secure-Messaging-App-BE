@@ -9,10 +9,10 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   hello: () => void;
-  matchmaking: (topicId: string) => void;
+  matchmaking: (topicId: string) => Promise<void>;
   revealName: () => void;
   dummyMatch: (roomId: string) => void;
-  message: (payload: {content: string;}) => void;
+  message: (payload: {content: string}) => void;
 }
 
 export interface SocketData {

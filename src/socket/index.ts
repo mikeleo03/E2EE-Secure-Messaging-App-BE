@@ -23,30 +23,35 @@ function socket({
     console.log(`🟩 User connected ${socket.id}`);
     socket.data.username = socket.handshake.auth.username;
 
-    socket.on('matchmaking', topicId => {
+    socket.on('matchmaking', async topicId => {
       socket.join(topicId);
 
       matchmakingManager.addToQueue(topicId, socket);
 
-      // TODO: Improve matchmaking algorithm
       const isAbleToMatch = matchmakingManager.check(topicId);
       if (isAbleToMatch) {
-        const {user1, user2} = matchmakingManager.match(topicId);
-        const chatroomId = uuidv4();
+        const result = await matchmakingManager.match(
+          topicId,
+          socket.data.username
+        );
 
-        // Handle room manager here
-        user1.join(chatroomId);
-        user2.join(chatroomId);
-        user1.data.roomId = chatroomId;
-        user2.data.roomId = chatroomId;
+        if (result !== false) {
+          const {user1, user2} = result;
+          const chatroomId = uuidv4();
 
-        const newRoom = new Room(chatroomId);
-        newRoom.setUser(user1.data.username);
-        newRoom.setUser(user2.data.username);
+          user1.join(chatroomId);
+          user2.join(chatroomId);
+          user1.data.roomId = chatroomId;
+          user2.data.roomId = chatroomId;
 
-        roomManager.addRoom(newRoom);
+          const newRoom = new Room(chatroomId);
+          newRoom.setUser(user1.data.username);
+          newRoom.setUser(user2.data.username);
 
-        io.to(chatroomId).emit('matched');
+          roomManager.addRoom(newRoom);
+
+          io.to(chatroomId).emit('matched');
+        }
       }
     });
 
@@ -80,12 +85,12 @@ function socket({
       }
     });
 
-    socket.on('message', ({ content }) => {
+    socket.on('message', ({content}) => {
       socket.to(socket.data.roomId).emit('message', {
         content,
-        from: socket.id
-      })
-    })
+        from: socket.id,
+      });
+    });
 
     socket.on('disconnect', () => {
       roomManager.deleteRoom(socket.data.roomId);
