@@ -4,6 +4,7 @@ import {
   ServerToClientEvents,
   SocketData,
 } from './interface';
+import authMiddleware from '../middleware/auth.middleware';
 import matchmakingManager from './matchmakingManager';
 import {v4 as uuidv4} from 'uuid';
 import roomManager from './roomManager';
@@ -15,6 +16,8 @@ function socket({
   io: Server<ClientToServerEvents, ServerToClientEvents, never, SocketData>;
 }) {
   console.log('🖥️ Sockets enabled');
+
+  io.use(authMiddleware.authSocketMiddleware);
 
   io.on('connection', socket => {
     console.log(`🟩 User connected ${socket.id}`);
@@ -76,6 +79,13 @@ function socket({
         });
       }
     });
+
+    socket.on('message', ({ content }) => {
+      socket.to(socket.data.roomId).emit('message', {
+        content,
+        from: socket.id
+      })
+    })
 
     socket.on('disconnect', () => {
       roomManager.deleteRoom(socket.data.roomId);

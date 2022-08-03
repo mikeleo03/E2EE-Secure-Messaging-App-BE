@@ -1,10 +1,9 @@
-
 import { Chat } from './Chat';
 import { Message } from './Message';
 import { Report } from './Report';
 import { RequestTopic } from './RequestTopic';
 import { Topic } from './Topic';
-import { User } from './User';
+import { Quota } from './Quota';
 
-export { User, Topic, RequestTopic, Chat, Message, Report };
+export { Topic, RequestTopic, Chat, Message, Report, Quota };
 

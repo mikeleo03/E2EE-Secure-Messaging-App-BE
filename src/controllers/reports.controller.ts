@@ -1,24 +1,39 @@
 import {Request, RequestHandler, Response} from 'express';
 import reportsServices from '../services/reports.services';
+import errorHandler from '../utils/error.handler';
 
 const getReports: RequestHandler = async (_: Request, res: Response) => {
-  const topics = await reportsServices.getReports();
+  try {
+    const reports = await reportsServices.getReports();
 
-  res.json(topics);
+    res.json({
+      reports: reports,
+    });
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
 };
 
 const getReportById: RequestHandler = async (
   req: Request<{id: string}>,
   res: Response
 ) => {
-  const id = parseInt(req.params.id);
+  try {
+    const id = parseInt(req.params.id);
 
-  if (!isNaN(id) && id > 0) {
-    const report = await reportsServices.getReportById(id);
+    if (!isNaN(id) && id > 0) {
+      const report = await reportsServices.getReportById(id);
 
-    res.json(report);
-  } else {
-    res.json([]);
+      res.json({
+        report: report,
+      });
+    } else {
+      res
+        .status(400)
+        .send('Report ID is not valid, ID must be an integer and > 0');
+    }
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
   }
 };
 
@@ -35,15 +50,21 @@ const createReport: RequestHandler = async (
   >,
   res: Response
 ) => {
-  const body = req.body;
-  const newReport = await reportsServices.createReport(
-    body.chat_id,
-    body.reporter_id,
-    body.reported_id,
-    body.reason
-  );
+  try {
+    const body = req.body;
+    const newReport = await reportsServices.createReport(
+      body.chat_id,
+      body.reporter_id,
+      body.reported_id,
+      body.reason
+    );
 
-  res.json(newReport);
+    res.json({
+      report: newReport,
+    });
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
 };
 
 export default {getReports, getReportById, createReport};
