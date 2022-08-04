@@ -19,4 +19,4 @@ export class Chat {
 
   @Column()
   end_datetime: Date;
-}
+

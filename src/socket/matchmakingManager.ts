@@ -4,6 +4,7 @@ import {
   ServerToClientEvents,
   SocketData,
 } from './interface';
+import chatServices from '../services/chat.services';
 
 type UserSocket = Socket<
   ClientToServerEvents,
@@ -45,13 +46,49 @@ class Matchmaking {
     return this.getQueue(topicId).topicQueue.length >= 2;
   }
 
-  public match(topicId: string) {
+  public async match(topicId: string, currentUserId: string) {
     if (!this.check(topicId)) throw new Error('Cannot match');
 
+    const chats = await chatServices.getUserChatByTopic(currentUserId, topicId);
     const queue = this.getQueue(topicId);
 
-    const user1 = queue.topicQueue.shift();
-    const user2 = queue.topicQueue.shift();
+    const user1Index = queue.topicQueue.findIndex(
+      queue => queue.data.username === currentUserId
+    );
+
+    const user2Index = queue.topicQueue.findIndex(queue => {
+      let hasChat = false;
+      let i = 0;
+
+      if (queue.data.username === currentUserId) {
+        return false;
+      }
+
+      while (!hasChat && i < chats.length) {
+        const chat = chats[i];
+
+        if (
+          (chat.user_id1.toString() === currentUserId &&
+            chat.user_id2.toString() === queue.data.username) ||
+          (chat.user_id2.toString() === currentUserId &&
+            chat.user_id1.toString() === queue.data.username)
+        ) {
+          hasChat = true;
+          break;
+        } else {
+          i++;
+        }
+      }
+
+      return !hasChat;
+    });
+
+    if (user2Index === -1) {
+      return false;
+    }
+
+    const user1 = queue.topicQueue.splice(user1Index, 1)[0];
+    const user2 = queue.topicQueue.splice(user2Index, 1)[0];
 
     return {user1, user2};
   }
