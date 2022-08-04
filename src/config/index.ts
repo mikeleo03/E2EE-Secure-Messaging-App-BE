@@ -15,5 +15,5 @@ export default {
     database: process.env.DB_DATABASE || 'test',
   },
   activeRole: process.env.ACTIVE_ROLE ? process.env.ACTIVE_ROLE.split(',') : [],
-  adminRole: process.env.ADMIN_ROLE || 'Committee'
+  adminRole: process.env.ADMIN_ROLE || 'Committee',
 };

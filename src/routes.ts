@@ -1,4 +1,4 @@
-import { Express } from 'express';
+import {Express} from 'express';
 import authController from './controllers/auth.controller';
 import historyController from './controllers/history.controller';
 import reportsController from './controllers/reports.controller';
@@ -62,11 +62,12 @@ const routes = (app: Express) => {
       authMiddleware.authAdminMiddleware,
       requestTopicsController.updateStatusRequestTopics
     );
-  
+
   app.route('/history/:user_id').get(historyController.getAllHistoryChat);
-  
-  app.route('/history/:user_id/:chat_id').get(historyController.getOneHistoryChat);
-    
+
+  app
+    .route('/history/:user_id/:chat_id')
+    .get(historyController.getOneHistoryChat);
 };
 
 export default routes;

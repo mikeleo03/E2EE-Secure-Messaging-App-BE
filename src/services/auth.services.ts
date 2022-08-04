@@ -19,33 +19,25 @@ const validateAccount = async (
   token: string,
   role: string[]
 ): Promise<boolean> => {
-  try {
-    const response = await usersServices.getUserAccount(token);
+  const response = await usersServices.getUserAccount(token);
 
-    if (response === null || typeof response === 'undefined') {
-      throw new Error('Failed to retieve user account');
-    }
-
-    return role.includes(response.role);
-  } catch (error) {
-    throw error;
+  if (response === null || typeof response === 'undefined') {
+    throw new Error('Failed to retieve user account');
   }
+
+  return role.includes(response.role);
 };
 
 const validateAdmin = async (token: string, role: string): Promise<boolean> => {
-  try {
-    const response = await usersServices.getUserAccount(token);
+  const response = await usersServices.getUserAccount(token);
 
-    console.log(response.role);
+  console.log(response.role);
 
-    if (response === null || typeof response === 'undefined') {
-      throw new Error('Failed to retrieve user account');
-    }
-
-    return role == response.role;
-  } catch (error) {
-    throw error;
+  if (response === null || typeof response === 'undefined') {
+    throw new Error('Failed to retrieve user account');
   }
+
+  return role === response.role;
 };
 
 const getAuthHeader = (authHeader: string | string[]): string => {
@@ -55,7 +47,7 @@ const getAuthHeader = (authHeader: string | string[]): string => {
 
   const authString = authHeader.toString();
   const split = authString.split(' ');
-  if (split.length == 2) {
+  if (split.length === 2) {
     return authString.split(' ')[1];
   }
 

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import { DataSource } from 'typeorm';
+import {DataSource} from 'typeorm';
 import config from '../config';
-import { Chat, Message, Report, RequestTopic, Topic, User, Quota } from '../models';
+import {Chat, Message, Report, RequestTopic, Topic, Quota} from '../models';
 
 export const db = new DataSource({
   type: 'postgres',
