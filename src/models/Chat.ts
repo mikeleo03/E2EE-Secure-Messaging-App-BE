@@ -9,10 +9,10 @@ export class Chat {
   topic_id: number;
 
   @Column()
-  user_id1: number;
+  user_id1: string;
 
   @Column()
-  user_id2: number;
+  user_id2: string;
 
   @Column()
   start_datetime: Date;

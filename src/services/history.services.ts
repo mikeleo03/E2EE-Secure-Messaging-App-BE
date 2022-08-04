@@ -6,14 +6,14 @@ const chatRepository = db.getRepository(Chat);
 const messageRepository = db.getRepository(Message);
 
 const getOneHistoryChat = async (params: {
-  user_id: number;
-  chat_id: number;
+  user_id: string;
+  chat_id: string;
 }) => {
   // useless user_id
   try {
     const messages = await messageRepository.find({
       where: {
-        chat_id: params.chat_id,
+        chat_id: parseInt(params.chat_id),
       },
       order: {
         timestamp: 'ASC',
@@ -27,18 +27,18 @@ const getOneHistoryChat = async (params: {
   }
 };
 
-const getAllHistoryChat = async (params: {id: number}) => {
+const getAllHistoryChat = async (params: {user_id: string}) => {
   try {
     // find chat that end_datetime is earlier than current time
     const dateNow = new Date();
     const chats = await chatRepository.find({
       where: [
         {
-          user_id1: params.id,
+          user_id1: params.user_id,
           end_datetime: LessThan(dateNow),
         },
         {
-          user_id2: params.id,
+          user_id2: params.user_id,
           end_datetime: LessThan(dateNow),
         },
       ],
