@@ -9,7 +9,7 @@ interface User {
   sex: string;
 }
 
-interface UserAccount extends User {
+export interface UserAccount extends User {
   role: string;
 }
 
