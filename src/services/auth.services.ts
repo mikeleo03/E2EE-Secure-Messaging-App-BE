@@ -1,6 +1,7 @@
 import axios from 'axios';
 import config from '../config';
 import usersServices from './users.services';
+import {UserAccount} from './users.services';
 
 const mainInstance = axios.create({
   baseURL: config.mainApiUrl,
@@ -18,26 +19,35 @@ const login = async (identifier: string, password: string) => {
 const validateAccount = async (
   token: string,
   role: string[]
-): Promise<boolean> => {
+): Promise<UserAccount> => {
   const response = await usersServices.getUserAccount(token);
 
   if (response === null || typeof response === 'undefined') {
     throw new Error('Failed to retieve user account');
   }
 
-  return role.includes(response.role);
+  if (!role.includes(response.role)) {
+    throw new Error('Invalid role');
+  }
+
+  return response;
 };
 
-const validateAdmin = async (token: string, role: string): Promise<boolean> => {
+const validateAdmin = async (
+  token: string,
+  role: string
+): Promise<UserAccount> => {
   const response = await usersServices.getUserAccount(token);
-
-  console.log(response.role);
 
   if (response === null || typeof response === 'undefined') {
     throw new Error('Failed to retrieve user account');
   }
 
-  return role === response.role;
+  if (!role.includes(response.role)) {
+    throw new Error('Invalid role');
+  }
+
+  return response;
 };
 
 const getAuthHeader = (authHeader: string | string[]): string => {

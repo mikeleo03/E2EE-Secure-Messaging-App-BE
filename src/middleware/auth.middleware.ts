@@ -14,14 +14,7 @@ const authMiddleware = async (req: Request, res: Response, next: Function) => {
   }
 
   try {
-    const validAccount = await authServices.validateAccount(
-      token,
-      config.activeRole
-    );
-    if (!validAccount) {
-      res.sendStatus(401);
-      return;
-    }
+    await authServices.validateAccount(token, config.activeRole);
     next();
   } catch (error) {
     errorHandler.handleResponseError(res, error);
@@ -36,50 +29,33 @@ const authAdminMiddleware = async (
   const authHeader = req.headers.authorization;
 
   const token = authServices.getAuthHeader(authHeader);
-  console.log(token);
-
   if (token === null) {
     res.sendStatus(401);
     return;
   }
 
   try {
-    const validAdmin = await authServices.validateAdmin(
-      token,
-      config.adminRole
-    );
-    console.log(validAdmin);
-
-    if (!validAdmin) {
-      res.sendStatus(401);
-      return;
-    }
+    await authServices.validateAdmin(token, config.adminRole);
     next();
   } catch (error) {
-    console.log(error);
-
     errorHandler.handleResponseError(res, error);
   }
 };
 
 const authSocketMiddleware = async (socket: Socket, next: Function) => {
-  const authHeader = socket.handshake.auth.token;
+  const token = socket.handshake.auth.token;
 
-  const token = authServices.getAuthHeader(authHeader);
   if (token === null) {
     next(new Error('Unauthorized'));
     return;
   }
 
   try {
-    const validAccount = await authServices.validateAccount(
+    const account = await authServices.validateAccount(
       token,
       config.activeRole
     );
-    if (!validAccount) {
-      next(new Error('Unauthorized'));
-      return;
-    }
+    socket.data.username = account.username;
     next();
   } catch (error) {
     next(error);
