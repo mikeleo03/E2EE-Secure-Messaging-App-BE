@@ -7,13 +7,13 @@ const messageRepository = db.getRepository(Message);
 
 const getOneHistoryChat = async (params: {
   user_id: string;
-  chat_id: number;
+  chat_id: string;
 }) => {
   // useless user_id
   try {
     const messages = await messageRepository.find({
       where: {
-        chat_id: params.chat_id,
+        chat_id: parseInt(params.chat_id),
       },
       order: {
         timestamp: 'ASC',
