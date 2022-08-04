@@ -13,17 +13,13 @@ const getReports = async () => {
 };
 
 const getReportById = async (id: number) => {
-  try {
-    const report = await reportRepository.findOneOrFail({
-      where: {
-        id: id,
-      },
-    });
+  const report = await reportRepository.findOneOrFail({
+    where: {
+      id: id,
+    },
+  });
 
-    return report;
-  } catch (error) {
-    throw error;
-  }
+  return report;
 };
 
 const createReport = async (
@@ -32,18 +28,14 @@ const createReport = async (
   reported_id: number,
   reason: string
 ) => {
-  try {
-    const newReport = await reportRepository.save({
-      chat_id,
-      reporter_id,
-      reported_id,
-      reason,
-    });
+  const newReport = await reportRepository.save({
+    chat_id,
+    reporter_id,
+    reported_id,
+    reason,
+  });
 
-    return newReport;
-  } catch (error) {
-    throw error;
-  }
+  return newReport;
 };
 
 export default {getReports, getReportById, createReport};

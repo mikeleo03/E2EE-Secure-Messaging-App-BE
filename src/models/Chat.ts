@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity()
 export class Chat {
@@ -19,4 +19,4 @@ export class Chat {
 
   @Column()
   end_datetime: Date;
-
+}
