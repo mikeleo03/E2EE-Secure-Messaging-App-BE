@@ -6,7 +6,7 @@ export class Message {
   chat_id: number;
 
   @Column()
-  sender_id: number;
+  sender_id: string;
 
   @Column()
   message: string;

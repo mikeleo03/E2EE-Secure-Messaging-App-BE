@@ -6,7 +6,7 @@ const chatRepository = db.getRepository(Chat);
 const messageRepository = db.getRepository(Message);
 
 const getOneHistoryChat = async (params: {
-  user_id: number;
+  user_id: string;
   chat_id: number;
 }) => {
   // useless user_id
@@ -27,18 +27,18 @@ const getOneHistoryChat = async (params: {
   }
 };
 
-const getAllHistoryChat = async (params: {id: number}) => {
+const getAllHistoryChat = async (params: {user_id: string}) => {
   try {
     // find chat that end_datetime is earlier than current time
     const dateNow = new Date();
     const chats = await chatRepository.find({
       where: [
         {
-          user_id1: params.id,
+          user_id1: params.user_id,
           end_datetime: LessThan(dateNow),
         },
         {
-          user_id2: params.id,
+          user_id2: params.user_id,
           end_datetime: LessThan(dateNow),
         },
       ],
