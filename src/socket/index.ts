@@ -26,7 +26,6 @@ function socket({
       socket.join(topicId);
 
       matchmakingManager.addToQueue(topicId, socket);
-      console.log(socket.data.username, 'looking for match for id', topicId);
 
       const isAbleToMatch = matchmakingManager.check(topicId);
       if (isAbleToMatch) {
@@ -57,7 +56,6 @@ function socket({
 
     socket.on('matchNotFound', topicId => {
       matchmakingManager.removeFromQueue(topicId, socket);
-      console.log('Removed', matchmakingManager.queueList);
     });
 
     socket.on('revealName', () => {
