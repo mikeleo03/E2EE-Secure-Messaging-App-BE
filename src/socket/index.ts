@@ -20,13 +20,13 @@ function socket({
   io.use(authMiddleware.authSocketMiddleware);
 
   io.on('connection', socket => {
-    console.log(`🟩 User connected ${socket.id}`);
-    socket.data.username = socket.handshake.auth.username;
+    console.log(`🟩 User connected ${socket.data.username} (${socket.id})`);
 
     socket.on('matchmaking', async topicId => {
       socket.join(topicId);
 
       matchmakingManager.addToQueue(topicId, socket);
+      console.log(socket.data.username, 'looking for match for id', topicId);
 
       const isAbleToMatch = matchmakingManager.check(topicId);
       if (isAbleToMatch) {
@@ -55,18 +55,9 @@ function socket({
       }
     });
 
-    // Emit events
-    socket.emit('noArg');
-    socket.emit('basicEmit', 1, 'hello');
-    socket.emit('withAck', 'str', num => {
-      if (typeof num === 'number') {
-        console.log('Definitely true');
-      }
-    });
-
-    // Listen events
-    socket.on('hello', () => {
-      console.log('Hello from client');
+    socket.on('matchNotFound', topicId => {
+      matchmakingManager.removeFromQueue(topicId, socket);
+      console.log('Removed', matchmakingManager.queueList);
     });
 
     socket.on('revealName', () => {

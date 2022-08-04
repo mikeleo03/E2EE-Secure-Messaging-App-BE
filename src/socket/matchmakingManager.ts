@@ -29,6 +29,10 @@ class Matchmaking {
     return this.queueList.filter(queue => queue.topicId === topicId)[0];
   }
 
+  private getQueueIdx(topicId: string) {
+    return this.queueList.findIndex(queue => queue.topicId === topicId);
+  }
+
   public addToQueue(topicId: string, user: UserSocket) {
     let isTopicInList = false;
     this.queueList = this.queueList.map(queue => {
@@ -40,6 +44,16 @@ class Matchmaking {
     });
 
     if (!isTopicInList) this.queueList.push({topicId, topicQueue: [user]});
+  }
+
+  public removeFromQueue(topicId: string, user: UserSocket) {
+    const queueIdx = this.getQueueIdx(topicId);
+
+    this.queueList[queueIdx].topicQueue = this.queueList[
+      queueIdx
+    ].topicQueue.filter(queuedUser => {
+      return queuedUser.data.username !== user.data.username;
+    });
   }
 
   public check(topicId: string) {
