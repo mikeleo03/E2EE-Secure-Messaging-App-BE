@@ -78,13 +78,30 @@ function socket({
     });
 
     socket.on('message', async ({content}) => {
-      socket.to(socket.data.roomId).emit('message', {
-        content,
-        from: socket.id,
-      });
+      try {
+        const room = roomManager.getRoom(socket.data.roomId);
+        await room.createMessage(socket.data.username, content);
 
-      const room = roomManager.getRoom(socket.data.roomId);
-      await room.createMessage(socket.data.username, content);
+        io.to(socket.data.roomId).emit('message', {
+          content,
+          from: socket.id,
+        });
+      } catch (e) {
+        let errorMessage: string;
+
+        if (typeof e === 'string') {
+          errorMessage = e;
+        } else if (e instanceof Error) {
+          errorMessage = `${e.name} - ${e.message}`;
+        } else {
+          errorMessage = 'Unknown error';
+        }
+
+        io.to(socket.data.roomId).emit('messageFail', {
+          error: errorMessage,
+          user_id: socket.data.username,
+        });
+      }
     });
 
     socket.on('disconnect', () => {

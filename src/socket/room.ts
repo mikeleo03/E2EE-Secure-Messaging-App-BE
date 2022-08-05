@@ -41,6 +41,9 @@ class Room {
   }
 
   async createMessage(sender_id: string, message: string) {
+    if (!this.users.includes(sender_id))
+      throw Error(`User ${sender_id} not found in chat room`);
+
     return await chatServices.createMessage({
       chat_id: this.roomId,
       sender_id,
