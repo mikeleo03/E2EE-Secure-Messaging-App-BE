@@ -8,7 +8,7 @@ export interface ClientToServerEvents {
   matchmaking: (topicId: string) => Promise<void>;
   matchNotFound: (topicId: string) => void;
   revealName: () => void;
-  message: (payload: {content: string}) => void;
+  message: (payload: {content: string}) => Promise<void>;
 }
 
 export interface SocketData {

@@ -45,9 +45,10 @@ function socket({
           user1.data.roomId = chatroomId;
           user2.data.roomId = chatroomId;
 
-          const newRoom = new Room(chatroomId);
+          const newRoom = new Room(chatroomId, topicId);
           newRoom.setUser(user1.data.username);
           newRoom.setUser(user2.data.username);
+          await newRoom.setChat();
 
           roomManager.addRoom(newRoom);
 
@@ -76,11 +77,14 @@ function socket({
       }
     });
 
-    socket.on('message', ({content}) => {
+    socket.on('message', async ({content}) => {
       socket.to(socket.data.roomId).emit('message', {
         content,
         from: socket.id,
       });
+
+      const room = roomManager.getRoom(socket.data.roomId);
+      await room.createMessage(socket.data.username, content);
     });
 
     socket.on('disconnect', () => {
