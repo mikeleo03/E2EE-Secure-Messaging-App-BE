@@ -24,19 +24,14 @@ const createMessage = async (params: {
   sender_id: string;
   message: string;
 }) => {
-  try {
-    const newMessage = await messageRepository.save({
-      chat_id: parseInt(params.chat_id),
-      sender_id: params.sender_id,
-      message: params.message,
-      timestamp: new Date(),
-    });
+  const newMessage = await messageRepository.save({
+    chat_id: params.chat_id,
+    sender_id: params.sender_id,
+    message: params.message,
+    timestamp: new Date(),
+  });
 
-    return newMessage;
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
+  return newMessage;
 };
 
 const createChat = async (params: {
@@ -45,21 +40,16 @@ const createChat = async (params: {
   user_id1: string;
   user_id2: string;
 }) => {
-  try {
-    const newChat = await chatRepository.save({
-      chat_id: params.chat_id,
-      topic_id: parseInt(params.topic_id),
-      user_id1: params.user_id1,
-      user_id2: params.user_id2,
-      start_datetime: new Date(),
-      end_datetime: null,
-    });
+  const newChat = await chatRepository.save({
+    chat_id: params.chat_id,
+    topic_id: parseInt(params.topic_id),
+    user_id1: params.user_id1,
+    user_id2: params.user_id2,
+    start_datetime: new Date(),
+    end_datetime: null,
+  });
 
-    return newChat;
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
+  return newChat;
 };
 
 const updateEndChat = async (params: {chat_id: string}) => {

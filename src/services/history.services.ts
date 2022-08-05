@@ -13,7 +13,7 @@ const getOneHistoryChat = async (params: {
   try {
     const messages = await messageRepository.find({
       where: {
-        chat_id: parseInt(params.chat_id),
+        chat_id: params.chat_id,
       },
       order: {
         timestamp: 'ASC',

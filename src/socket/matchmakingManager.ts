@@ -49,11 +49,13 @@ class Matchmaking {
   public removeFromQueue(topicId: string, user: UserSocket) {
     const queueIdx = this.getQueueIdx(topicId);
 
-    this.queueList[queueIdx].topicQueue = this.queueList[
-      queueIdx
-    ].topicQueue.filter(queuedUser => {
-      return queuedUser.data.username !== user.data.username;
-    });
+    if (queueIdx !== -1) {
+      this.queueList[queueIdx].topicQueue = this.queueList[
+        queueIdx
+      ].topicQueue.filter(queuedUser => {
+        return queuedUser.data.username !== user.data.username;
+      });
+    }
   }
 
   public check(topicId: string) {

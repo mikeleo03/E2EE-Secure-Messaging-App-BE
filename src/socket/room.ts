@@ -26,17 +26,17 @@ class Room {
   async setChat() {
     if (this.users.length < 2) throw Error('Add user first!');
 
-    const result = await chatServices.createChat({
-      chat_id: this.roomId,
-      topic_id: this.topicId,
-      user_id1: this.users[0],
-      user_id2: this.users[1],
-    });
+    try {
+      const result = await chatServices.createChat({
+        chat_id: this.roomId,
+        topic_id: this.topicId,
+        user_id1: this.users[0],
+        user_id2: this.users[1],
+      });
 
-    if (result instanceof Chat) {
       this.chat = result;
-    } else {
-      throw Error('Failed to create chat instance');
+    } catch (error) {
+      console.error(error);
     }
   }
 

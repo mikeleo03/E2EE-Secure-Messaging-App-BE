@@ -3,7 +3,10 @@ import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 @Entity()
 export class Message {
   @PrimaryGeneratedColumn()
-  chat_id: number;
+  message_id: number;
+
+  @Column()
+  chat_id: string;
 
   @Column()
   sender_id: string;

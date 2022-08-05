@@ -17,6 +17,6 @@ export class Chat {
   @Column()
   start_datetime: Date;
 
-  @Column()
+  @Column({nullable: true})
   end_datetime: Date;
 }
