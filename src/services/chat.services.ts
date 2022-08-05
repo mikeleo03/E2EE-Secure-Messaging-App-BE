@@ -47,7 +47,7 @@ const createChat = async (params: {
 }) => {
   try {
     const newChat = await chatRepository.save({
-      chat_id: parseInt(params.chat_id),
+      chat_id: params.chat_id,
       topic_id: parseInt(params.topic_id),
       user_id1: params.user_id1,
       user_id2: params.user_id2,
@@ -66,12 +66,12 @@ const updateEndChat = async (params: {chat_id: string}) => {
   try {
     const chat = await chatRepository.findOne({
       where: {
-        chat_id: parseInt(params.chat_id),
+        chat_id: params.chat_id,
       },
     });
 
     const updatedChat = await chatRepository.save({
-      chat_id: parseInt(params.chat_id),
+      chat_id: params.chat_id,
       topic_id: chat.topic_id,
       user_id1: chat.user_id1,
       user_id2: chat.user_id2,

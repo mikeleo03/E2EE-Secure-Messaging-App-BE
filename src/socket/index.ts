@@ -45,9 +45,10 @@ function socket({
           user1.data.roomId = chatroomId;
           user2.data.roomId = chatroomId;
 
-          const newRoom = new Room(chatroomId);
+          const newRoom = new Room(chatroomId, topicId);
           newRoom.setUser(user1.data.username);
           newRoom.setUser(user2.data.username);
+          await newRoom.setChat();
 
           roomManager.addRoom(newRoom);
 
@@ -76,11 +77,30 @@ function socket({
       }
     });
 
-    socket.on('message', ({content}) => {
-      socket.to(socket.data.roomId).emit('message', {
-        content,
-        from: socket.id,
-      });
+    socket.on('message', async ({content}) => {
+      try {
+        const room = roomManager.getRoom(socket.data.roomId);
+        await room.createMessage(socket.data.username, content);
+
+        io.to(socket.data.roomId).emit('message', {
+          content,
+          from: socket.id,
+        });
+      } catch (e) {
+        let errorMessage: string;
+
+        if (typeof e === 'string') {
+          errorMessage = e;
+        } else if (e instanceof Error) {
+          errorMessage = `${e.name} - ${e.message}`;
+        } else {
+          errorMessage = 'Unknown error';
+        }
+
+        io.to(socket.id).emit('messageFail', {
+          error: errorMessage,
+        });
+      }
     });
 
     socket.on('disconnect', () => {

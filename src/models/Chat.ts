@@ -1,9 +1,9 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, PrimaryColumn} from 'typeorm';
 
 @Entity()
 export class Chat {
-  @PrimaryGeneratedColumn()
-  chat_id: number;
+  @PrimaryColumn()
+  chat_id: string;
 
   @Column()
   topic_id: number;
