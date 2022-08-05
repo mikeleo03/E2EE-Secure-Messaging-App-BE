@@ -7,6 +7,7 @@ import topicsController from './controllers/topics.controller';
 import usersController from './controllers/users.controller';
 import authMiddleware from './middleware/auth.middleware';
 import quotaController from './controllers/quota.controller';
+import bannedUserController from './controllers/banned-user.controller';
 
 const routes = (app: Express) => {
   app.route('/').get((_, res) => {
@@ -17,7 +18,9 @@ const routes = (app: Express) => {
     .route('/user')
     .get(authMiddleware.authMiddleware, usersController.getUserProfile);
 
-  app.route('/auth').post(authController.login);
+  app
+    .route('/auth')
+    .post(authMiddleware.authBannedUserMiddleware, authController.login);
 
   app
     .route('/topics')
@@ -68,6 +71,10 @@ const routes = (app: Express) => {
   app
     .route('/history/:user_id/:chat_id')
     .get(historyController.getOneHistoryChat);
+
+  app
+    .route('/ban-user')
+    .post(authMiddleware.authAdminMiddleware, bannedUserController.banUser);
 };
 
 export default routes;
