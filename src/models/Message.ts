@@ -1,22 +1,16 @@
 import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity()
-export class Chat {
+export class Message {
   @PrimaryGeneratedColumn()
   chat_id: number;
 
   @Column()
-  topic_id: number;
+  sender_id: string;
 
   @Column()
-  user_id1: string;
+  message: string;
 
   @Column()
-  user_id2: string;
-
-  @Column()
-  start_datetime: Date;
-
-  @Column()
-  end_datetime: Date;
+  timestamp: Date;
 }

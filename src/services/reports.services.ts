@@ -8,24 +8,18 @@ const getReports = async () => {
     const reports = await reportRepository.find();
     return reports;
   } catch (err) {
-    console.error(err);
-    return [];
+    throw new Error('Unable to get reports');
   }
 };
 
 const getReportById = async (id: number) => {
-  try {
-    const report = await reportRepository.find({
-      where: {
-        id: id,
-      },
-    });
+  const report = await reportRepository.findOneOrFail({
+    where: {
+      id: id,
+    },
+  });
 
-    return report;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
+  return report;
 };
 
 const createReport = async (
@@ -34,19 +28,14 @@ const createReport = async (
   reported_id: number,
   reason: string
 ) => {
-  try {
-    const newReport = await reportRepository.save({
-      chat_id,
-      reporter_id,
-      reported_id,
-      reason,
-    });
+  const newReport = await reportRepository.save({
+    chat_id,
+    reporter_id,
+    reported_id,
+    reason,
+  });
 
-    return newReport;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
+  return newReport;
 };
 
 export default {getReports, getReportById, createReport};

@@ -1,11 +1,29 @@
-import { Request, Response } from 'express';
-import { Socket } from 'socket.io';
+import {Request, Response} from 'express';
+import {Socket} from 'socket.io';
+import config from '../config';
 import authServices from '../services/auth.services';
 import errorHandler from '../utils/error.handler';
 
-const authMiddleware = async (
-  req : Request, 
-  res: Response, 
+const authMiddleware = async (req: Request, res: Response, next: Function) => {
+  const authHeader = req.headers.authorization;
+
+  const token = authServices.getAuthHeader(authHeader);
+  if (token === null) {
+    res.sendStatus(401);
+    return;
+  }
+
+  try {
+    await authServices.validateAccount(token, config.activeRole);
+    next();
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
+};
+
+const authAdminMiddleware = async (
+  req: Request,
+  res: Response,
   next: Function
 ) => {
   const authHeader = req.headers.authorization;
@@ -15,44 +33,37 @@ const authMiddleware = async (
     res.sendStatus(401);
     return;
   }
-  
+
   try {
-    const validToken = await authServices.validateToken(token);
-    if (!validToken) {
-      res.sendStatus(401);
-      return;
-    }
+    await authServices.validateAdmin(token, config.adminRole);
     next();
-  } catch(error) {
+  } catch (error) {
     errorHandler.handleResponseError(res, error);
   }
-}
+};
 
-const authSocketMiddleware = async (
-  socket: Socket, 
-  next: Function
-) => {
-  const authHeader = socket.handshake.auth.token;
-    
-  const token = authServices.getAuthHeader(authHeader);
+const authSocketMiddleware = async (socket: Socket, next: Function) => {
+  const token = socket.handshake.auth.token;
+
   if (token === null) {
     next(new Error('Unauthorized'));
     return;
   }
-  
+
   try {
-    const validToken = await authServices.validateToken(token);
-    if (!validToken) {
-      next(new Error('Unauthorized'));
-      return;
-    }
+    const account = await authServices.validateAccount(
+      token,
+      config.activeRole
+    );
+    socket.data.username = account.username;
     next();
-  } catch(error) {
+  } catch (error) {
     next(error);
   }
-}
+};
 
 export default {
   authMiddleware,
-  authSocketMiddleware
+  authAdminMiddleware,
+  authSocketMiddleware,
 };

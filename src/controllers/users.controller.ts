@@ -3,20 +3,12 @@ import authServices from '../services/auth.services';
 import usersServices from '../services/users.services';
 import errorHandler from '../utils/error.handler';
 
-const getUser: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
+const getUserProfile: RequestHandler = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
-
   const token = authServices.getAuthHeader(authHeader);
-  if (token === null) {
-    res.sendStatus(401);
-    return;
-  }
 
   try {
-    const response = await usersServices.getUser(token);
+    const response = await usersServices.getUserProfile(token);
 
     res.json(response);
   } catch (error) {
@@ -24,4 +16,4 @@ const getUser: RequestHandler = async (
   }
 };
 
-export default {getUser};
+export default {getUserProfile};

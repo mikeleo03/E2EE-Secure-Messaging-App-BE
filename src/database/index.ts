@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import {DataSource} from 'typeorm';
-import {Topic, RequestTopic, Chat, Report} from '../models';
 import config from '../config';
+import {Chat, Message, Report, RequestTopic, Topic, Quota} from '../models';
 
 export const db = new DataSource({
   type: 'postgres',
@@ -12,7 +12,7 @@ export const db = new DataSource({
   database: config.DB.database,
   synchronize: true,
   logging: false,
-  entities: [Topic, RequestTopic, Chat, Report],
+  entities: [Topic, RequestTopic, Chat, Report, Message, Quota],
   migrations: [],
   subscribers: [],
 });
