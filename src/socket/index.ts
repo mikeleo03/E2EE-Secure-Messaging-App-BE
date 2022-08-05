@@ -80,10 +80,10 @@ function socket({
     socket.on('message', async ({content}) => {
       try {
         const room = roomManager.getRoom(socket.data.roomId);
-        await room.createMessage(socket.data.username, content);
+        const message = await room.createMessage(socket.data.username, content);
 
         io.to(socket.data.roomId).emit('message', {
-          content,
+          content: message.message,
           from: socket.id,
         });
       } catch (e) {
