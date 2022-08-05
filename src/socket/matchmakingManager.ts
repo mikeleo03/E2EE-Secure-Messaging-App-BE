@@ -68,11 +68,7 @@ class Matchmaking {
     const chats = await chatServices.getUserChatByTopic(currentUserId, topicId);
     const queue = this.getQueue(topicId);
 
-    const user1Index = queue.topicQueue.findIndex(
-      queue => queue.data.username === currentUserId
-    );
-
-    const user2Index = queue.topicQueue.findIndex(queue => {
+    const matchedUserIndex = queue.topicQueue.findIndex(queue => {
       let hasChat = false;
       let i = 0;
 
@@ -99,14 +95,19 @@ class Matchmaking {
       return !hasChat;
     });
 
-    if (user2Index === -1) {
+    if (matchedUserIndex === -1) {
       return false;
     }
 
-    const user1 = queue.topicQueue.splice(user1Index, 1)[0];
-    const user2 = queue.topicQueue.splice(user2Index, 1)[0];
+    const matchedUser = queue.topicQueue.splice(matchedUserIndex, 1)[0];
 
-    return {user1, user2};
+    const currentUserIndex = queue.topicQueue.findIndex(
+      queue => queue.data.username === currentUserId
+    );
+
+    const currentUser = queue.topicQueue.splice(currentUserIndex, 1)[0];
+
+    return {currentUser, matchedUser};
   }
 }
 
