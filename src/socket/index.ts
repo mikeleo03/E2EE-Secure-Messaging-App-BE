@@ -97,9 +97,8 @@ function socket({
           errorMessage = 'Unknown error';
         }
 
-        io.to(socket.data.roomId).emit('messageFail', {
+        io.to(socket.id).emit('messageFail', {
           error: errorMessage,
-          user_id: socket.data.username,
         });
       }
     });

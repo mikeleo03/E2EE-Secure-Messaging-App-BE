@@ -2,7 +2,7 @@ export interface ServerToClientEvents {
   matched: () => void;
   revealName: (payload: object) => void;
   message: (payload: {content: string; from: string}) => void;
-  messageFail: (payload: {error: string; user_id: string}) => void;
+  messageFail: (payload: {error: string}) => void;
 }
 
 export interface ClientToServerEvents {
