@@ -9,6 +9,7 @@ import matchmakingManager from './matchmakingManager';
 import {v4 as uuidv4} from 'uuid';
 import roomManager from './roomManager';
 import Room from './room';
+import usersManager from './usersManager';
 
 function socket({
   io,
@@ -20,6 +21,7 @@ function socket({
   io.use(authMiddleware.authSocketMiddleware);
 
   io.on('connection', socket => {
+    usersManager.addUser();
     console.log(`🟩 User connected ${socket.data.username} (${socket.id})`);
 
     socket.on('matchmaking', async topicId => {
@@ -82,6 +84,7 @@ function socket({
     });
 
     socket.on('disconnect', () => {
+      usersManager.deleteUser();
       roomManager.deleteRoom(socket.data.roomId);
     });
   });
