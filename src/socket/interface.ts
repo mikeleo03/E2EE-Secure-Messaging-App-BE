@@ -1,6 +1,11 @@
 export interface ServerToClientEvents {
   matched: () => void;
-  revealName: (payload: object) => void;
+  revealName: (payload: {
+    username1: string;
+    name1: string;
+    username2: string;
+    name2: string;
+  }) => void;
   message: (payload: {content: string; from: string}) => void;
   messageFail: (payload: {error: string}) => void;
 }
@@ -15,4 +20,5 @@ export interface ClientToServerEvents {
 export interface SocketData {
   username: string;
   roomId: string;
+  name: string;
 }

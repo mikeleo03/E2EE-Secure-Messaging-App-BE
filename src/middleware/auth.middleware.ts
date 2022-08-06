@@ -56,6 +56,7 @@ const authSocketMiddleware = async (socket: Socket, next: Function) => {
       config.activeRole
     );
     socket.data.username = account.username;
+    socket.data.name = account.name;
     next();
   } catch (error) {
     next(error);
