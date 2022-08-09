@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import {Socket} from 'socket.io';
 import config from '../config';
 import authServices from '../services/auth.services';
+import bannedUserServices from '../services/banned-user.services';
 import errorHandler from '../utils/error.handler';
 
 const authMiddleware = async (req: Request, res: Response, next: Function) => {
@@ -63,8 +64,34 @@ const authSocketMiddleware = async (socket: Socket, next: Function) => {
   }
 };
 
+const authBannedUserMiddleware = async (
+  req: Request,
+  res: Response,
+  next: Function
+) => {
+  const {identifier} = req.body;
+  try {
+    const bannedUser = await bannedUserServices.checkBannedUser({
+      identifier,
+    });
+
+    if (!bannedUser) {
+      next();
+    } else {
+      return res.send({
+        error: {
+          message: 'User is banned',
+        },
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 export default {
   authMiddleware,
   authAdminMiddleware,
   authSocketMiddleware,
+  authBannedUserMiddleware,
 };
