@@ -5,21 +5,24 @@ class Room {
   roomId: string;
   topicId: string;
   users: string[];
+  usersName: object;
   checkReveal: object;
   isRevealed: boolean;
   chat: Chat;
 
   constructor(roomId: string, topicId: string) {
     this.roomId = roomId;
-    this.isRevealed = false;
-    this.users = [];
-    this.checkReveal = {};
-    this.chat = null;
     this.topicId = topicId;
+    this.users = [];
+    this.usersName = {};
+    this.checkReveal = {};
+    this.isRevealed = false;
+    this.chat = null;
   }
 
-  setUser(user: string) {
+  setUser(user: string, name: string) {
     this.users.push(user);
+    this.usersName[user] = name;
     this.checkReveal[user] = false;
   }
 
@@ -66,6 +69,10 @@ class Room {
       this.isRevealed = true;
     }
     return shouldReveal;
+  }
+
+  getUsersName(user: string) {
+    return this.usersName[user];
   }
 }
 

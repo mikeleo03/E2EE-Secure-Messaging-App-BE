@@ -37,7 +37,8 @@ function socket({
         );
 
         if (result !== false) {
-          const {user1, user2} = result;
+          const user1 = result.currentUser;
+          const user2 = result.matchedUser;
           const chatroomId = uuidv4();
 
           user1.join(chatroomId);
@@ -46,8 +47,8 @@ function socket({
           user2.data.roomId = chatroomId;
 
           const newRoom = new Room(chatroomId, topicId);
-          newRoom.setUser(user1.data.username);
-          newRoom.setUser(user2.data.username);
+          newRoom.setUser(user1.data.username, user1.data.name);
+          newRoom.setUser(user2.data.username, user2.data.name);
           await newRoom.setChat();
 
           roomManager.addRoom(newRoom);
@@ -68,11 +69,13 @@ function socket({
       console.log(room);
       room?.requestReveal(socket.data.username);
       if (room?.canRevealName()) {
-        const user1 = room.users[0];
-        const user2 = room.users[1];
+        const username1 = room.users[0];
+        const username2 = room.users[1];
         io.to(roomId).emit('revealName', {
-          user1: `Dummy Name 1 ${user1}`,
-          user2: `Dummy Name 2 ${user2}`,
+          username1: username1,
+          name1: room.getUsersName(username1),
+          username2: username2,
+          name2: room.getUsersName(username2),
         });
       }
     });
