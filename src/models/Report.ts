@@ -17,14 +17,11 @@ export class Report {
   @JoinColumn({name: 'chat_id'})
   chat: Chat;
 
-  @Column({type: 'int', nullable: true})
-  chat_id: number;
+  @Column()
+  chat_id: string;
 
   @Column()
-  reporter_id: number;
-
-  @Column()
-  reported_id: number;
+  issuer_id: string;
 
   @Column()
   reason: string;
