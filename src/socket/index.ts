@@ -53,7 +53,7 @@ function socket({
 
           roomManager.addRoom(newRoom);
 
-          io.to(chatroomId).emit('matched');
+          io.to(chatroomId).emit('matched', newRoom.roomId);
         }
       }
     });

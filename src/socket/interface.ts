@@ -1,5 +1,5 @@
 export interface ServerToClientEvents {
-  matched: () => void;
+  matched: (roomId: string) => void;
   revealName: (payload: {
     username1: string;
     name1: string;
