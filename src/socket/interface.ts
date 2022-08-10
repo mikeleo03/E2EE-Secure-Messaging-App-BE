@@ -8,6 +8,7 @@ export interface ServerToClientEvents {
   }) => void;
   message: (payload: {content: string; from: string}) => void;
   messageFail: (payload: {error: string}) => void;
+  endChat: (message: string) => void;
 }
 
 export interface ClientToServerEvents {
@@ -15,6 +16,7 @@ export interface ClientToServerEvents {
   matchNotFound: (topicId: string) => void;
   revealName: () => void;
   message: (payload: {content: string}) => Promise<void>;
+  endChat: () => void;
 }
 
 export interface SocketData {
