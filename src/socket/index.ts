@@ -63,10 +63,8 @@ function socket({
     });
 
     socket.on('revealName', () => {
-      console.log(`${socket.data.username} ask reveal`);
       const roomId = socket.data.roomId;
       const room = roomManager.getRoom(roomId);
-      console.log(room);
       room?.requestReveal(socket.data.username);
       if (room?.canRevealName()) {
         const username1 = room.users[0];
@@ -106,9 +104,22 @@ function socket({
       }
     });
 
+    socket.on('endChat', () => {
+      if (socket.data.roomId) {
+        io.to(socket.data.roomId).emit(
+          'endChat',
+          'Your partner has ended the chat'
+        );
+      }
+    });
+
     socket.on('disconnect', () => {
       usersManager.deleteUser();
       roomManager.deleteRoom(socket.data.roomId);
+      io.to(socket.data.roomId).emit(
+        'endChat',
+        'Your partner has disconnected'
+      );
     });
   });
 }
