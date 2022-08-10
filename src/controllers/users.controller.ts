@@ -8,7 +8,7 @@ const getUserProfile: RequestHandler = async (req: Request, res: Response) => {
   const token = authServices.getAuthHeader(authHeader);
 
   try {
-    const response = await usersServices.getUserProfile(token);
+    const response = await usersServices.getUserAccount(token);
 
     res.json(response);
   } catch (error) {

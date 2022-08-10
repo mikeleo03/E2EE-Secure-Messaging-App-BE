@@ -42,9 +42,8 @@ const createReport: RequestHandler = async (
     {},
     {},
     {
-      chat_id: number;
-      reporter_id: number;
-      reported_id: number;
+      chat_id: string;
+      issuer_id: string;
       reason: string;
     }
   >,
@@ -52,13 +51,15 @@ const createReport: RequestHandler = async (
 ) => {
   try {
     const body = req.body;
+    console.log('Reporting');
+    console.log(body);
     const newReport = await reportsServices.createReport(
       body.chat_id,
-      body.reporter_id,
-      body.reported_id,
+      body.issuer_id,
       body.reason
     );
 
+    console.log('Reported');
     res.json({
       report: newReport,
     });

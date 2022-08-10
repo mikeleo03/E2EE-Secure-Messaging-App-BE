@@ -23,15 +23,13 @@ const getReportById = async (id: number) => {
 };
 
 const createReport = async (
-  chat_id: number,
-  reporter_id: number,
-  reported_id: number,
+  chat_id: string,
+  issuer_id: string,
   reason: string
 ) => {
   const newReport = await reportRepository.save({
     chat_id,
-    reporter_id,
-    reported_id,
+    issuer_id,
     reason,
   });
 
