@@ -9,6 +9,7 @@ export interface ServerToClientEvents {
   message: (payload: {content: string; from: string}) => void;
   messageFail: (payload: {error: string}) => void;
   endChat: (message: string) => void;
+  onlineUsers: (onlineUsers: number) => void;
 }
 
 export interface ClientToServerEvents {
@@ -17,6 +18,7 @@ export interface ClientToServerEvents {
   revealName: () => void;
   message: (payload: {content: string}) => Promise<void>;
   endChat: () => void;
+  getOnlineUsers: () => void;
 }
 
 export interface SocketData {

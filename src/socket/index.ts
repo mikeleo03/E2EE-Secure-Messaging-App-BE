@@ -22,12 +22,18 @@ function socket({
 
   io.on('connection', socket => {
     usersManager.addUser();
+    io.emit('onlineUsers', usersManager.numUsers);
     console.log(`🟩 User connected ${socket.data.username} (${socket.id})`);
+
+    socket.on('getOnlineUsers', () => {
+      io.emit('onlineUsers', usersManager.numUsers);
+    });
 
     socket.on('matchmaking', async topicId => {
       socket.join(topicId);
 
       matchmakingManager.addToQueue(topicId, socket);
+      console.log(matchmakingManager.queueList);
 
       const isAbleToMatch = matchmakingManager.check(topicId);
       if (isAbleToMatch) {
@@ -115,6 +121,7 @@ function socket({
 
     socket.on('disconnect', () => {
       usersManager.deleteUser();
+      io.emit('onlineUsers', usersManager.numUsers);
       roomManager.deleteRoom(socket.data.roomId);
       io.to(socket.data.roomId).emit(
         'endChat',
