@@ -1,5 +1,5 @@
 class UsersManager {
-  numUsers: number = 0;
+  numUsers = 0;
 
   addUser() {
     this.numUsers++;

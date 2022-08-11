@@ -95,7 +95,7 @@ class Matchmaking {
       return !hasChat;
     });
 
-    if (matchedUserIndex === -2) {
+    if (matchedUserIndex === -1) {
       return false;
     }
 
