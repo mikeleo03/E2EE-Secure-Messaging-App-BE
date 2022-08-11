@@ -43,6 +43,18 @@ class Room {
     }
   }
 
+  async updateEndChat() {
+    try {
+      const result = await chatServices.updateEndChat({
+        chat_id: this.roomId,
+      });
+
+      // this.chat = result[0];
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async createMessage(sender_id: string, message: string) {
     if (!this.users.includes(sender_id))
       throw Error(`User ${sender_id} not found in chat room`);

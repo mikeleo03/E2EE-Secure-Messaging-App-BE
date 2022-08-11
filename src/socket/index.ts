@@ -1,16 +1,16 @@
 import {Server} from 'socket.io';
+import {v4 as uuidv4} from 'uuid';
+import authMiddleware from '../middleware/auth.middleware';
+import quotaServices from '../services/quota.services';
 import {
   ClientToServerEvents,
   ServerToClientEvents,
   SocketData,
 } from './interface';
-import authMiddleware from '../middleware/auth.middleware';
 import matchmakingManager from './matchmakingManager';
-import {v4 as uuidv4} from 'uuid';
-import roomManager from './roomManager';
 import Room from './room';
+import roomManager from './roomManager';
 import usersManager from './usersManager';
-import quotaServices from '../services/quota.services';
 
 function socket({
   io,
@@ -132,6 +132,10 @@ function socket({
 
     socket.on('endChat', () => {
       if (socket.data.roomId) {
+        const room = roomManager.getRoom(socket.data.roomId);
+        if (room) {
+          room.updateEndChat();
+        }
         io.to(socket.data.roomId).emit(
           'endChat',
           'Your partner has ended the chat'
@@ -140,6 +144,10 @@ function socket({
     });
 
     socket.on('disconnect', () => {
+      const room = roomManager.getRoom(socket.data.roomId);
+      if (room) {
+        room.updateEndChat();
+      }
       usersManager.deleteUser();
       io.emit('onlineUsers', usersManager.numUsers);
       roomManager.deleteRoom(socket.data.roomId);
