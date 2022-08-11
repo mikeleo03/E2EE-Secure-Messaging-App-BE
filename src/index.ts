@@ -12,7 +12,7 @@ const app = express();
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(cors({credentials: false}));
+app.use(cors({origin: config.corsOrigin}));
 
 // Initialize routes
 routes(app);
@@ -21,7 +21,8 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    credentials: false,
+    credentials: true,
+    origin: config.corsOrigin,
   },
 });
 

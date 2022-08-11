@@ -10,6 +10,7 @@ import {v4 as uuidv4} from 'uuid';
 import roomManager from './roomManager';
 import Room from './room';
 import usersManager from './usersManager';
+import quotaServices from '../services/quota.services';
 
 function socket({
   io,
@@ -30,10 +31,27 @@ function socket({
     });
 
     socket.on('matchmaking', async topicId => {
+      console.log('waiting');
+      const quota = await quotaServices.getUserQuota({
+        username: socket.data.username,
+      });
+      console.log('done');
+
+      if (quota === -1) {
+        throw new Error('Couldnt get quota');
+      }
+
+      if (quota >= 20) {
+        io.to(socket.id).emit('quotaExceeded');
+        console.log('exceed');
+        return;
+      }
+
+      io.to(socket.id).emit('continueMatch');
+
       socket.join(topicId);
 
       matchmakingManager.addToQueue(topicId, socket);
-      console.log(matchmakingManager.queueList);
 
       const isAbleToMatch = matchmakingManager.check(topicId);
       if (isAbleToMatch) {
@@ -59,6 +77,8 @@ function socket({
 
           roomManager.addRoom(newRoom);
 
+          await quotaServices.updateUserQuota({username: user1.data.username});
+          await quotaServices.updateUserQuota({username: user2.data.username});
           io.to(chatroomId).emit('matched', newRoom.roomId);
         }
       }

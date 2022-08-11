@@ -10,6 +10,8 @@ export interface ServerToClientEvents {
   messageFail: (payload: {error: string}) => void;
   endChat: (message: string) => void;
   onlineUsers: (onlineUsers: number) => void;
+  quotaExceeded: () => void;
+  continueMatch: () => void;
 }
 
 export interface ClientToServerEvents {

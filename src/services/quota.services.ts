@@ -30,7 +30,7 @@ const getUserQuota = async (params: {username: string}) => {
     return userQuota.user_quota;
   } catch (error) {
     console.log(error);
-    return [];
+    return -1;
   }
 };
 
