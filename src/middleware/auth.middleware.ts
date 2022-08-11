@@ -78,7 +78,7 @@ const authBannedUserMiddleware = async (
     if (!bannedUser) {
       next();
     } else {
-      return res.send({
+      return res.status(403).send({
         error: {
           message: 'User is banned',
         },
