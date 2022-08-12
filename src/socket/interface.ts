@@ -8,7 +8,7 @@ export interface ServerToClientEvents {
   }) => void;
   message: (payload: {content: string; from: string}) => void;
   messageFail: (payload: {error: string}) => void;
-  endChat: (message: string) => Promise<void>;
+  endChat: (message: string) => void;
   // onlineUsers: (onlineUsers: number) => void;
   quotaExceeded: () => void;
   continueMatch: () => void;
