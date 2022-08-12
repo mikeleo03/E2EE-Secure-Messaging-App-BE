@@ -2,6 +2,7 @@ import {Server} from 'socket.io';
 import {v4 as uuidv4} from 'uuid';
 import authMiddleware from '../middleware/auth.middleware';
 import quotaServices from '../services/quota.services';
+import sessionServices from '../services/session.services';
 import {
   ClientToServerEvents,
   ServerToClientEvents,
@@ -21,14 +22,25 @@ function socket({
 
   io.use(authMiddleware.authSocketMiddleware);
 
-  io.on('connection', socket => {
-    usersManager.addUser();
-    io.emit('onlineUsers', usersManager.numUsers);
-    console.log(`🟩 User connected ${socket.data.username} (${socket.id})`);
+  io.use(async (socket, next) => {
+    const isLoggedIn = await sessionServices.checkSession(socket.data.username);
+    console.log(`Status ${socket.data.username}: ${isLoggedIn}`);
+    if (isLoggedIn) {
+      next(new Error('Already Logged In! Please disconnect your other tab(s)'));
+    }
 
-    socket.on('getOnlineUsers', () => {
-      io.emit('onlineUsers', usersManager.numUsers);
-    });
+    next();
+  });
+
+  io.on('connection', async socket => {
+    // usersManager.addUser();
+    // io.emit('onlineUsers', usersManager.numUsers);
+    console.log(`🟩 User connected ${socket.data.username} (${socket.id})`);
+    await sessionServices.setSession(socket.data.username, true);
+
+    // socket.on('getOnlineUsers', () => {
+    //   io.emit('onlineUsers', usersManager.numUsers);
+    // });
 
     socket.on('matchmaking', async topicId => {
       console.log('waiting');
@@ -143,19 +155,22 @@ function socket({
       }
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
       const room = roomManager.getRoom(socket.data.roomId);
       if (room) {
         room.updateEndChat();
       }
-      usersManager.deleteUser();
-      io.emit('onlineUsers', usersManager.numUsers);
+      // usersManager.deleteUser();
+      // io.emit('onlineUsers', usersManager.numUsers);
       roomManager.deleteRoom(socket.data.roomId);
+      await sessionServices.setSession(socket.data.username, false);
       io.to(socket.data.roomId).emit(
         'endChat',
         'Your partner has disconnected'
       );
     });
+
+    io.to(socket.id).emit('finishLoading');
   });
 }
 

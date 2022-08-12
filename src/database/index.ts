@@ -9,6 +9,7 @@ import {
   Topic,
   Quota,
   BannedUser,
+  Session,
 } from '../models';
 
 export const db = new DataSource({
@@ -20,7 +21,16 @@ export const db = new DataSource({
   database: config.DB.database,
   synchronize: true,
   logging: false,
-  entities: [Topic, RequestTopic, Chat, Report, Message, Quota, BannedUser],
+  entities: [
+    Topic,
+    RequestTopic,
+    Chat,
+    Report,
+    Message,
+    Quota,
+    BannedUser,
+    Session,
+  ],
   migrations: [],
   subscribers: [],
 });
