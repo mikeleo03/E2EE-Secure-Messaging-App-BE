@@ -7,14 +7,12 @@ import socket from './socket';
 import routes from './routes';
 // eslint-disable-next-line node/no-extraneous-import
 import * as cors from 'cors';
-import {createClient} from 'redis';
-import {createAdapter} from '@socket.io/redis-adapter';
 
 const app = express();
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(cors({origin: config.corsOrigin}));
+app.use(cors({credentials: false}));
 
 // Initialize routes
 routes(app);
@@ -23,8 +21,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    credentials: true,
-    origin: config.corsOrigin,
+    credentials: false,
   },
 });
 

@@ -6,8 +6,6 @@ export default {
   port: Number(process.env.PORT) || 4000,
   host: process.env.HOST || 'localhost',
   mainApiUrl: process.env.MAIN_API_URL || 'http://localhost:1337/api',
-  rediUrl: process.env.REDIS_URL || 'redis://localhost:6379',
-  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   DB: {
     host: process.env.DB_HOST || 'localhost',
     port: Number(process.env.DB_PORT) || 5432,
