@@ -34,10 +34,10 @@ httpServer.listen(config.port, config.host, async () => {
 
   console.log(`🚀 Server is listening on http://${config.host}:${config.port}`);
 
-  const pubClient = createClient({url: 'redis://localhost:6379'});
-  const subClient = pubClient.duplicate();
+  // const pubClient = createClient({url: 'redis://localhost:6379'});
+  // const subClient = pubClient.duplicate();
 
-  io.adapter(createAdapter(pubClient, subClient));
+  // io.adapter(createAdapter(pubClient, subClient));
 
   socket({io});
 });
