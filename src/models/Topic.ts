@@ -1,9 +1,11 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+import {Chat} from './Chat';
 
 @Entity()
 export class Topic {
@@ -18,4 +20,7 @@ export class Topic {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @OneToMany(type => Chat, chat => chat.topic)
+  chats: Chat[];
 }
