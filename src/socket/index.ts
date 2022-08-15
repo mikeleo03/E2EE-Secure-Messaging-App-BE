@@ -20,23 +20,19 @@ function socket({
   console.log('🖥️ Sockets enabled');
 
   // TODO: Uncomment after testing
-  // io.use(authMiddleware.authSocketMiddleware);
+  io.use(authMiddleware.authSocketMiddleware);
 
-  // io.use(async (socket, next) => {
-  //   const isLoggedIn = await sessionServices.checkSession(socket.data.username);
-  //   console.log(`Status ${socket.data.username}: ${isLoggedIn}`);
-  //   if (isLoggedIn) {
-  //     next(new Error('Already Logged In! Please disconnect your other tab(s)'));
-  //   }
+  io.use(async (socket, next) => {
+    const isLoggedIn = await sessionServices.checkSession(socket.data.username);
+    console.log(`Status ${socket.data.username}: ${isLoggedIn}`);
+    if (isLoggedIn) {
+      next(new Error('Already Logged In! Please disconnect your other tab(s)'));
+    }
 
-  //   next();
-  // });
+    next();
+  });
 
   io.on('connection', async socket => {
-    // TODO: Unmock data after testing
-    socket.data.name = socket.handshake.auth.name as string;
-    socket.data.username = socket.handshake.auth.username as string;
-
     // usersManager.addUser();
     // io.emit('onlineUsers', usersManager.numUsers);
     console.log(`🟩 User connected ${socket.data.username} (${socket.id})`);
