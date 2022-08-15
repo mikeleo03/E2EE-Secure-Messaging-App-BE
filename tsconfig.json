@@ -4,6 +4,7 @@
             "es5",
             "es6"
         ],
+        "typeRoots": ["./src/types"],
         "target": "ES2017",
         "module": "commonjs",
         "moduleResolution": "node",

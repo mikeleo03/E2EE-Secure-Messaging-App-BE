@@ -15,7 +15,8 @@ const authMiddleware = async (req: Request, res: Response, next: Function) => {
   }
 
   try {
-    await authServices.validateAccount(token, config.activeRole);
+    const user = await authServices.validateAccount(token, config.activeRole);
+    req.username = user.username;
     next();
   } catch (error) {
     errorHandler.handleResponseError(res, error);
