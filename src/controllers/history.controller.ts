@@ -3,6 +3,12 @@ import historyServices from '../services/history.services';
 
 const getOneHistoryChat: RequestHandler = async (req, res) => {
   const {user_id, chat_id} = req.params;
+  const username = req.username;
+
+  if (username !== user_id) {
+    return res.status(403).json('Forbidden');
+  }
+
   const historyChat = await historyServices.getOneHistoryChat({
     user_id: user_id,
     chat_id: chat_id,
@@ -13,6 +19,12 @@ const getOneHistoryChat: RequestHandler = async (req, res) => {
 
 const getAllHistoryChat: RequestHandler = async (req, res) => {
   const {user_id} = req.params;
+  const username = req.username;
+
+  if (username !== user_id) {
+    return res.status(403).json('Forbidden');
+  }
+
   const historyChat = await historyServices.getAllHistoryChat({
     user_id: user_id,
   });
