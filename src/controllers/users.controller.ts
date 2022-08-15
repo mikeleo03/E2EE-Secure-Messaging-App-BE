@@ -6,7 +6,6 @@ import errorHandler from '../utils/error.handler';
 const getUserProfile: RequestHandler = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
   const token = authServices.getAuthHeader(authHeader);
-  console.log('I am called');
 
   try {
     const response = await usersServices.getUserAccount(token);
