@@ -1,5 +1,4 @@
-import {Column, Entity, ManyToOne, PrimaryColumn} from 'typeorm';
-import {Topic} from './Topic';
+import {Column, Entity, PrimaryColumn} from 'typeorm';
 
 @Entity()
 export class Chat {
@@ -20,7 +19,4 @@ export class Chat {
 
   @Column({nullable: true})
   end_datetime: Date;
-
-  @ManyToOne(type => Topic, topic => topic.chats)
-  topic: Topic;
 }
