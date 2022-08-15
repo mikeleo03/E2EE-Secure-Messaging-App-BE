@@ -12,14 +12,6 @@ const app = express();
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(
-  cors({
-    origin: '*',
-    credentials: false,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  })
-);
-
 app.use((_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
@@ -28,6 +20,14 @@ app.use((_, res, next) => {
   );
   next();
 });
+
+app.use(
+  cors({
+    origin: '*',
+    credentials: false,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  })
+);
 
 // Initialize routes
 routes(app);
