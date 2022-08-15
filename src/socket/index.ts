@@ -11,7 +11,6 @@ import {
 import matchmakingManager from './matchmakingManager';
 import Room from './room';
 import roomManager from './roomManager';
-import usersManager from './usersManager';
 
 function socket({
   io,
@@ -20,19 +19,24 @@ function socket({
 }) {
   console.log('🖥️ Sockets enabled');
 
-  io.use(authMiddleware.authSocketMiddleware);
+  // TODO: Uncomment after testing
+  // io.use(authMiddleware.authSocketMiddleware);
 
-  io.use(async (socket, next) => {
-    const isLoggedIn = await sessionServices.checkSession(socket.data.username);
-    console.log(`Status ${socket.data.username}: ${isLoggedIn}`);
-    if (isLoggedIn) {
-      next(new Error('Already Logged In! Please disconnect your other tab(s)'));
-    }
+  // io.use(async (socket, next) => {
+  //   const isLoggedIn = await sessionServices.checkSession(socket.data.username);
+  //   console.log(`Status ${socket.data.username}: ${isLoggedIn}`);
+  //   if (isLoggedIn) {
+  //     next(new Error('Already Logged In! Please disconnect your other tab(s)'));
+  //   }
 
-    next();
-  });
+  //   next();
+  // });
 
   io.on('connection', async socket => {
+    // TODO: Unmock data after testing
+    socket.data.name = socket.handshake.auth.name as string;
+    socket.data.username = socket.handshake.auth.username as string;
+
     // usersManager.addUser();
     // io.emit('onlineUsers', usersManager.numUsers);
     console.log(`🟩 User connected ${socket.data.username} (${socket.id})`);
@@ -43,11 +47,9 @@ function socket({
     // });
 
     socket.on('matchmaking', async topicId => {
-      console.log('waiting');
       const quota = await quotaServices.getUserQuota({
         username: socket.data.username,
       });
-      console.log('done');
 
       if (quota === -1) {
         throw new Error('Couldnt get quota');
