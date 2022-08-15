@@ -1,13 +1,13 @@
 import {Express} from 'express';
 import authController from './controllers/auth.controller';
+import bannedUserController from './controllers/banned-user.controller';
 import historyController from './controllers/history.controller';
+import quotaController from './controllers/quota.controller';
 import reportsController from './controllers/reports.controller';
 import requestTopicsController from './controllers/request-topics.controller';
 import topicsController from './controllers/topics.controller';
 import usersController from './controllers/users.controller';
 import authMiddleware from './middleware/auth.middleware';
-import quotaController from './controllers/quota.controller';
-import bannedUserController from './controllers/banned-user.controller';
 
 const routes = (app: Express) => {
   app.route('/').get((_, res) => {
@@ -66,11 +66,13 @@ const routes = (app: Express) => {
       requestTopicsController.updateStatusRequestTopics
     );
 
-  app.route('/history/:user_id').get(historyController.getAllHistoryChat);
+  app
+    .route('/history/:user_id')
+    .get(authMiddleware.authMiddleware, historyController.getAllHistoryChat);
 
   app
     .route('/history/:user_id/:chat_id')
-    .get(historyController.getOneHistoryChat);
+    .get(authMiddleware.authMiddleware, historyController.getOneHistoryChat);
 
   app
     .route('/ban-user')
