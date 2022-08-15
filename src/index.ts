@@ -25,7 +25,7 @@ app.use(
   cors({
     origin: '*',
     credentials: false,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   })
 );
 
@@ -38,7 +38,7 @@ const io = new Server(httpServer, {
   cors: {
     origin: '*',
     credentials: false,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   },
 });
 
