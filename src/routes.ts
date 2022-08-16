@@ -78,6 +78,13 @@ const routes = (app: Express) => {
     .route('/ban-user')
     .post(authMiddleware.authAdminMiddleware, bannedUserController.banUser);
 
+  app
+    .route('/ban-user')
+    .get(
+      authMiddleware.authAdminMiddleware,
+      bannedUserController.getBannedUsers
+    );
+
   app.route('/quota/:username').get(quotaController.getUserQuota);
 
   app.route('/quota/:username').post(quotaController.updateUserQuota);

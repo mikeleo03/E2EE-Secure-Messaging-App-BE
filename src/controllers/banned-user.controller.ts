@@ -18,4 +18,13 @@ const banUser: RequestHandler = async (
   }
 };
 
-export default {banUser};
+const getBannedUsers: RequestHandler = async (req, res) => {
+  try {
+    const response = await bannedUserServices.getAllBannedUser();
+    res.json(response);
+  } catch (error) {
+    res.status(404).json('Failed to retrieve ban list');
+  }
+};
+
+export default {banUser, getBannedUsers};
