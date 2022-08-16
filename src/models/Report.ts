@@ -28,4 +28,7 @@ export class Report {
 
   @Column()
   reason: string;
+
+  @Column({nullable: true})
+  seen_by: string;
 }

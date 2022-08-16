@@ -28,6 +28,28 @@ const routes = (app: Express) => {
     .get(authMiddleware.authMiddleware, topicsController.getTopics);
 
   app
+    .route('/reports/seen')
+    .get(authMiddleware.authAdminMiddleware, reportsController.getSeenReports);
+
+  app
+    .route('/reports/unseen')
+    .get(
+      authMiddleware.authAdminMiddleware,
+      reportsController.getUnseenReports
+    );
+
+  app
+    .route('/reports/mark-seen')
+    .post(authMiddleware.authAdminMiddleware, reportsController.markReportSeen);
+
+  app
+    .route('/reports/mark-unseen')
+    .post(
+      authMiddleware.authAdminMiddleware,
+      reportsController.markReportUnseen
+    );
+
+  app
     .route('/reports')
     .get(authMiddleware.authAdminMiddleware, reportsController.getReports);
 

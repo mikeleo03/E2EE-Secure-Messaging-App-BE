@@ -65,4 +65,67 @@ const createReport: RequestHandler = async (
   }
 };
 
-export default {getReports, getReportById, createReport};
+const markReportSeen: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const {username} = req;
+    const {id} = req.body;
+
+    const response = await reportsServices.markReport(id, username);
+
+    res.json(response);
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
+};
+
+const markReportUnseen: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const {id} = req.body;
+
+    const response = await reportsServices.markReport(id, null);
+
+    res.json(response);
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
+};
+
+const getSeenReports: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const response = await reportsServices.getSeenReports();
+
+    res.json({
+      reports: response,
+    });
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
+};
+
+const getUnseenReports: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const response = await reportsServices.getUnseenReports();
+
+    res.json({
+      reports: response,
+    });
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
+};
+
+export default {
+  getReports,
+  getReportById,
+  createReport,
+  markReportSeen,
+  markReportUnseen,
+  getSeenReports,
+  getUnseenReports,
+};

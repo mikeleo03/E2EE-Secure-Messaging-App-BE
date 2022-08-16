@@ -1,3 +1,4 @@
+import {IsNull, Not} from 'typeorm';
 import {db} from '../database';
 import {Report, Chat} from '../models';
 
@@ -49,4 +50,40 @@ const createReport = async (
   return newReport;
 };
 
-export default {getReports, getReportById, createReport};
+const markReport = async (id: number, seenBy: string) => {
+  const report = await reportRepository.save({
+    id,
+    seen_by: seenBy,
+  });
+
+  return report;
+};
+
+const getSeenReports = async () => {
+  const reports = await reportRepository.find({
+    where: {
+      seen_by: Not(IsNull()),
+    },
+  });
+
+  return reports;
+};
+
+const getUnseenReports = async () => {
+  const reports = await reportRepository.find({
+    where: {
+      seen_by: IsNull(),
+    },
+  });
+
+  return reports;
+};
+
+export default {
+  getReports,
+  getReportById,
+  createReport,
+  markReport,
+  getSeenReports,
+  getUnseenReports,
+};

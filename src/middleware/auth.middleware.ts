@@ -37,7 +37,8 @@ const authAdminMiddleware = async (
   }
 
   try {
-    await authServices.validateAdmin(token, config.adminRole);
+    const account = await authServices.validateAdmin(token, config.adminRole);
+    req.username = account.username;
     next();
   } catch (error) {
     errorHandler.handleResponseError(res, error);
