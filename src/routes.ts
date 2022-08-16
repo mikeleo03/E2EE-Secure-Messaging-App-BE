@@ -5,6 +5,7 @@ import historyController from './controllers/history.controller';
 import quotaController from './controllers/quota.controller';
 import reportsController from './controllers/reports.controller';
 import requestTopicsController from './controllers/request-topics.controller';
+import sessionController from './controllers/session.controller';
 import topicsController from './controllers/topics.controller';
 import usersController from './controllers/users.controller';
 import authMiddleware from './middleware/auth.middleware';
@@ -88,6 +89,10 @@ const routes = (app: Express) => {
   app.route('/quota/:username').get(quotaController.getUserQuota);
 
   app.route('/quota/:username').post(quotaController.updateUserQuota);
+
+  app
+    .route('/socket-connect')
+    .get(authMiddleware.authMiddleware, sessionController.getSession);
 };
 
 export default routes;
