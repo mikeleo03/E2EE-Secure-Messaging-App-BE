@@ -1,6 +1,5 @@
 import {db} from '../database';
 import {Report, Chat} from '../models';
-import chatServices from './chat.services';
 
 const reportRepository = db.getRepository(Report);
 const chatRepository = db.getRepository(Chat);
@@ -35,16 +34,20 @@ const createReport = async (
     },
   });
 
+  console.log(issuedChat);
+
   const issuedUserId =
     issuedChat.user_id1 === issuer_id
       ? issuedChat.user_id2
       : issuedChat.user_id1;
 
+  console.log(issuedUserId);
+
   const newReport = await reportRepository.save({
-    chat_id,
-    issuer_id,
-    issuedUserId,
-    reason,
+    chat_id: chat_id,
+    issuer_id: issuer_id,
+    issued_id: issuedUserId,
+    reason: reason,
   });
 
   return newReport;

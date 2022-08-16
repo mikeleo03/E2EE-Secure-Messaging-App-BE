@@ -26,17 +26,11 @@ const routes = (app: Express) => {
     .route('/topics')
     .get(authMiddleware.authMiddleware, topicsController.getTopics);
 
-  app
-    .route('/reports')
-    .get(authMiddleware.authAdminMiddleware, reportsController.getReports);
+  app.route('/reports').get(reportsController.getReports);
 
-  app
-    .route('/reports/:id')
-    .get(authMiddleware.authAdminMiddleware, reportsController.getReportById);
+  app.route('/reports/:id').get(reportsController.getReportById);
 
-  app
-    .route('/reports')
-    .post(authMiddleware.authMiddleware, reportsController.createReport);
+  app.route('/reports').post(reportsController.createReport);
 
   app
     .route('/request-topics')
