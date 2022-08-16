@@ -19,7 +19,6 @@ function socket({
 }) {
   console.log('🖥️ Sockets enabled');
 
-  // TODO: Uncomment after testing
   io.use(authMiddleware.authSocketMiddleware);
 
   io.use(async (socket, next) => {
