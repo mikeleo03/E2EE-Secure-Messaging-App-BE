@@ -28,8 +28,12 @@ app.use(
     origin: '*',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    optionsSuccessStatus: 200,
+    maxAge: 0,
   })
 );
+
+app.options('*', cors());
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
