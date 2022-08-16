@@ -1,0 +1,20 @@
+import {Request, RequestHandler} from 'express';
+import sessionServices from '../services/session.services';
+
+interface RequestWithBody<T> extends Request {
+  body: T;
+}
+
+const getSession: RequestHandler = async (
+  req: RequestWithBody<{username: string}>,
+  res
+) => {
+  try {
+    const isLoggedin = await sessionServices.checkSession(req.body.username);
+    res.json({canConnect: !isLoggedin});
+  } catch (error) {
+    res.status(404).json('Error: cannot retreive sessions');
+  }
+};
+
+export default {getSession};
