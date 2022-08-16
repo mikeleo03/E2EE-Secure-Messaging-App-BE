@@ -51,15 +51,12 @@ const createReport: RequestHandler = async (
 ) => {
   try {
     const body = req.body;
-    console.log('Reporting');
-    console.log(body);
     const newReport = await reportsServices.createReport(
       body.chat_id,
       body.issuer_id,
       body.reason
     );
 
-    console.log('Reported');
     res.json({
       report: newReport,
     });

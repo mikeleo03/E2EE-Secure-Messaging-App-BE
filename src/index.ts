@@ -12,7 +12,22 @@ const app = express();
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(cors({credentials: false}));
+app.use((_, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
+
+app.use(
+  cors({
+    origin: '*',
+    credentials: false,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  })
+);
 
 // Initialize routes
 routes(app);
@@ -21,7 +36,9 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
+    origin: '*',
     credentials: false,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   },
 });
 
