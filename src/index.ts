@@ -10,8 +10,6 @@ import * as cors from 'cors';
 
 const app = express();
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
@@ -25,13 +23,16 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(
-//   cors({
-//     origin: '*',
-//     credentials: true,
-//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-//   })
-// );
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  })
+);
+
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 // Initialize routes
 routes(app);
