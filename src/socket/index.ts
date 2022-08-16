@@ -53,7 +53,6 @@ function socket({
 
       if (quota >= 20) {
         io.to(socket.id).emit('quotaExceeded');
-        console.log('exceed');
         return;
       }
 
@@ -154,6 +153,9 @@ function socket({
     });
 
     socket.on('disconnect', async () => {
+      console.log(
+        `🟥 User disconnected ${socket.data.username} (${socket.id})`
+      );
       const room = roomManager.getRoom(socket.data.roomId);
       if (room) {
         room.updateEndChat();
