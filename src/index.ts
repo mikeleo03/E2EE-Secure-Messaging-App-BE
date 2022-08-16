@@ -12,22 +12,26 @@ const app = express();
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use((_, res, next) => {
+app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
+    'Access-Control-Allow-Methods',
+    'GET,HEAD,PUT,POST,OPTIONS,UPDATE,DELETE'
+  );
+  res.header(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization, token'
   );
   next();
 });
 
-app.use(
-  cors({
-    origin: '*',
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  })
-);
+// app.use(
+//   cors({
+//     origin: '*',
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+//   })
+// );
 
 // Initialize routes
 routes(app);
