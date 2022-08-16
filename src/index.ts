@@ -10,9 +10,22 @@ import * as cors from 'cors';
 
 const app = express();
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Methods',
+    'GET,HEAD,PUT,POST,OPTIONS,UPDATE,DELETE'
+  );
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization, token'
+  );
+  next();
+});
+
 app.use(
   cors({
-    origin: 'https://preview-social.katitb22.com',
+    origin: '*',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   })
@@ -30,7 +43,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: 'https://preview-social.katitb22.com',
+    origin: '*',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   },
