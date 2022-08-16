@@ -11,6 +11,7 @@ import * as cors from 'cors';
 const app = express();
 
 app.use((req, res, next) => {
+  next();
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
     'Access-Control-Allow-Methods',
@@ -20,7 +21,6 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept, Authorization, token'
   );
-  next();
 });
 
 app.use(
