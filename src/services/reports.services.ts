@@ -1,7 +1,8 @@
 import {db} from '../database';
-import {Report} from '../models';
+import {Report, Chat} from '../models';
 
 const reportRepository = db.getRepository(Report);
+const chatRepository = db.getRepository(Chat);
 
 const getReports = async () => {
   try {
@@ -27,10 +28,22 @@ const createReport = async (
   issuer_id: string,
   reason: string
 ) => {
+  const issuedChat = await chatRepository.findOneOrFail({
+    where: {
+      chat_id: chat_id,
+    },
+  });
+
+  const issuedUserId =
+    issuedChat.user_id1 === issuer_id
+      ? issuedChat.user_id2
+      : issuedChat.user_id1;
+
   const newReport = await reportRepository.save({
-    chat_id,
-    issuer_id,
-    reason,
+    chat_id: chat_id,
+    issuer_id: issuer_id,
+    issued_id: issuedUserId,
+    reason: reason,
   });
 
   return newReport;
