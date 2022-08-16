@@ -34,14 +34,10 @@ const createReport = async (
     },
   });
 
-  console.log(issuedChat);
-
   const issuedUserId =
     issuedChat.user_id1 === issuer_id
       ? issuedChat.user_id2
       : issuedChat.user_id1;
-
-  console.log(issuedUserId);
 
   const newReport = await reportRepository.save({
     chat_id: chat_id,

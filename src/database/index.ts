@@ -33,7 +33,7 @@ export const db = new DataSource({
   ],
   migrations: [],
   subscribers: [],
-  // ssl: {
-  //   rejectUnauthorized: false,
-  // },
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
