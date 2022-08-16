@@ -1,3 +1,4 @@
+import {BlobOptions} from 'buffer';
 import {db} from '../database';
 import {Report, Chat} from '../models';
 
@@ -44,9 +45,35 @@ const createReport = async (
     issuer_id: issuer_id,
     issued_id: issuedUserId,
     reason: reason,
+    seen: false,
   });
 
   return newReport;
 };
 
-export default {getReports, getReportById, createReport};
+const markReport = async (id: number, seen: boolean) => {
+  const report = await reportRepository.save({
+    id,
+    seen,
+  });
+
+  return report;
+};
+
+const getReportsBySeen = async (seen: boolean) => {
+  const reports = await reportRepository.find({
+    where: {
+      seen,
+    },
+  });
+
+  return reports;
+};
+
+export default {
+  getReports,
+  getReportById,
+  createReport,
+  markReport,
+  getReportsBySeen,
+};

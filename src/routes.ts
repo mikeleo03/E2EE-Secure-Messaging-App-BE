@@ -27,6 +27,17 @@ const routes = (app: Express) => {
     .get(authMiddleware.authMiddleware, topicsController.getTopics);
 
   app
+    .route('/reports/filter')
+    .get(
+      authMiddleware.authAdminMiddleware,
+      reportsController.getReportsBySeen
+    );
+
+  app
+    .route('/reports/mark')
+    .post(authMiddleware.authAdminMiddleware, reportsController.markReport);
+
+  app
     .route('/reports')
     .get(authMiddleware.authAdminMiddleware, reportsController.getReports);
 

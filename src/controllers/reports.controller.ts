@@ -65,4 +65,39 @@ const createReport: RequestHandler = async (
   }
 };
 
-export default {getReports, getReportById, createReport};
+const markReport: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const {id, seen} = req.body;
+
+    const response = await reportsServices.markReport(id, seen);
+
+    res.json(response);
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
+};
+
+const getReportsBySeen: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const seen = req.query.seen === 'true';
+
+    const response = await reportsServices.getReportsBySeen(seen);
+
+    res.json({
+      reports: response,
+    });
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
+};
+
+export default {
+  getReports,
+  getReportById,
+  createReport,
+  markReport,
+  getReportsBySeen,
+};
