@@ -31,7 +31,13 @@ const addBannedUser = async (params: {identifier: string}) => {
   }
 };
 
+const getAllBannedUser = async () => {
+  const bannedUsers = await bannedUserRepository.find();
+  return bannedUsers;
+};
+
 export default {
   checkBannedUser,
   addBannedUser,
+  getAllBannedUser,
 };
