@@ -12,11 +12,9 @@ const app = express();
 
 app.use(
   cors({
-    origin: '*',
+    origin: 'https://preview-social.katitb22.com',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    optionsSuccessStatus: 200,
-    maxAge: 0,
   })
 );
 
@@ -32,7 +30,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: '*',
+    origin: 'https://preview-social.katitb22.com',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   },
