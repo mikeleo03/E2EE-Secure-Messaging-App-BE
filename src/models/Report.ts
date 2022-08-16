@@ -24,5 +24,8 @@ export class Report {
   issuer_id: string;
 
   @Column()
+  issued_id: string;
+
+  @Column()
   reason: string;
 }
