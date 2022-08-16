@@ -37,8 +37,8 @@ const createReport = async (
 
   const issuedUserId =
     issuedChat.user_id1 === issuer_id
-      ? issuedChat.user_id1
-      : issuedChat.user_id2;
+      ? issuedChat.user_id2
+      : issuedChat.user_id1;
 
   const newReport = await reportRepository.save({
     chat_id,
