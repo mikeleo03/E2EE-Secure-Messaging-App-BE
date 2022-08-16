@@ -1,4 +1,4 @@
-import {BlobOptions} from 'buffer';
+import {IsNull, Not} from 'typeorm';
 import {db} from '../database';
 import {Report, Chat} from '../models';
 
@@ -45,25 +45,34 @@ const createReport = async (
     issuer_id: issuer_id,
     issued_id: issuedUserId,
     reason: reason,
-    seen: false,
   });
 
   return newReport;
 };
 
-const markReport = async (id: number, seen: boolean) => {
+const markReport = async (id: number, seenBy: string) => {
   const report = await reportRepository.save({
     id,
-    seen,
+    seen_by: seenBy,
   });
 
   return report;
 };
 
-const getReportsBySeen = async (seen: boolean) => {
+const getSeenReports = async () => {
   const reports = await reportRepository.find({
     where: {
-      seen,
+      seen_by: Not(IsNull()),
+    },
+  });
+
+  return reports;
+};
+
+const getUnseenReports = async () => {
+  const reports = await reportRepository.find({
+    where: {
+      seen_by: IsNull(),
     },
   });
 
@@ -75,5 +84,6 @@ export default {
   getReportById,
   createReport,
   markReport,
-  getReportsBySeen,
+  getSeenReports,
+  getUnseenReports,
 };

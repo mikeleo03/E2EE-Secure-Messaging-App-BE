@@ -29,6 +29,6 @@ export class Report {
   @Column()
   reason: string;
 
-  @Column()
-  seen: boolean;
+  @Column({nullable: true})
+  seen_by: string;
 }

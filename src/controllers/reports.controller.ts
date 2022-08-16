@@ -65,11 +65,12 @@ const createReport: RequestHandler = async (
   }
 };
 
-const markReport: RequestHandler = async (req: Request, res: Response) => {
+const markReportSeen: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const {id, seen} = req.body;
+    const {username} = req;
+    const {id} = req.body;
 
-    const response = await reportsServices.markReport(id, seen);
+    const response = await reportsServices.markReport(id, username);
 
     res.json(response);
   } catch (error) {
@@ -77,14 +78,39 @@ const markReport: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-const getReportsBySeen: RequestHandler = async (
+const markReportUnseen: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const seen = req.query.seen === 'true';
+    const {id} = req.body;
 
-    const response = await reportsServices.getReportsBySeen(seen);
+    const response = await reportsServices.markReport(id, null);
+
+    res.json(response);
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
+};
+
+const getSeenReports: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const response = await reportsServices.getSeenReports();
+
+    res.json({
+      reports: response,
+    });
+  } catch (error) {
+    errorHandler.handleResponseError(res, error);
+  }
+};
+
+const getUnseenReports: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const response = await reportsServices.getUnseenReports();
 
     res.json({
       reports: response,
@@ -98,6 +124,8 @@ export default {
   getReports,
   getReportById,
   createReport,
-  markReport,
-  getReportsBySeen,
+  markReportSeen,
+  markReportUnseen,
+  getSeenReports,
+  getUnseenReports,
 };
