@@ -18,6 +18,19 @@ const banUser: RequestHandler = async (
   }
 };
 
+const unbanUser: RequestHandler = async (
+  req: RequestWithBody<{identifier: string}>,
+  res
+) => {
+  const {identifier} = req.body;
+  try {
+    const response = await bannedUserServices.deleteBannedUser({identifier});
+    res.json(response);
+  } catch (error) {
+    res.status(400).json('Invalid identifier or password');
+  }
+};
+
 const getBannedUsers: RequestHandler = async (req, res) => {
   try {
     const response = await bannedUserServices.getAllBannedUser();
@@ -27,4 +40,4 @@ const getBannedUsers: RequestHandler = async (req, res) => {
   }
 };
 
-export default {banUser, getBannedUsers};
+export default {banUser, unbanUser, getBannedUsers};

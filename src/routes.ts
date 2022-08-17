@@ -103,6 +103,10 @@ const routes = (app: Express) => {
 
   app
     .route('/ban-user')
+    .delete(authMiddleware.authAdminMiddleware, bannedUserController.unbanUser);
+
+  app
+    .route('/ban-user')
     .get(
       authMiddleware.authAdminMiddleware,
       bannedUserController.getBannedUsers
