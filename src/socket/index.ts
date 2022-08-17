@@ -50,10 +50,10 @@ function socket({
         throw new Error('Couldnt get quota');
       }
 
-      if (quota >= 20) {
-        io.to(socket.id).emit('quotaExceeded');
-        return;
-      }
+      // if (quota >= 20) {
+      //   io.to(socket.id).emit('quotaExceeded');
+      //   return;
+      // }
 
       io.to(socket.id).emit('continueMatch');
 
