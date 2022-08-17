@@ -118,7 +118,11 @@ const routes = (app: Express) => {
 
   app
     .route('/socket-connect')
-    .get(authMiddleware.authMiddleware, sessionController.getSession);
+    .post(
+      authMiddleware.authBannedUserMiddleware,
+      authMiddleware.authMiddleware,
+      sessionController.getSession
+    );
 };
 
 export default routes;
