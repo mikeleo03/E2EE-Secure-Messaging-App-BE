@@ -154,10 +154,8 @@ function socket({
 
     socket.on('leaveRoom', () => {
       if (socket.data.roomId) {
-        console.log(`${socket.data.name} room id is ${socket.data.roomId}`);
         socket.leave(socket.data.roomId);
         socket.data.roomId = null;
-        console.log(`${socket.data.name} Left room ${socket.data.roomId}`);
       }
     });
 
