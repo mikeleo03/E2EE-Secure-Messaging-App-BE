@@ -22,6 +22,7 @@ export interface ClientToServerEvents {
   message: (payload: {content: string}) => Promise<void>;
   endChat: () => void;
   getOnlineUsers: () => void;
+  leaveRoom: () => void;
 }
 
 export interface SocketData {
