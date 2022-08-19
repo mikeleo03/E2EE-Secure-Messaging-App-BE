@@ -11,6 +11,7 @@ import {
 import matchmakingManager from './matchmakingManager';
 import Room from './room';
 import roomManager from './roomManager';
+import usersManager from './usersManager';
 
 function socket({
   io,
@@ -32,14 +33,14 @@ function socket({
   });
 
   io.on('connection', async socket => {
-    // usersManager.addUser();
-    // io.emit('onlineUsers', usersManager.numUsers);
+    usersManager.addUser();
+    io.emit('onlineUsers', usersManager.getNumUsers());
     console.log(`🟩 User connected ${socket.data.username} (${socket.id})`);
     await sessionServices.setSession(socket.data.username, true);
 
-    // socket.on('getOnlineUsers', () => {
-    //   io.emit('onlineUsers', usersManager.numUsers);
-    // });
+    socket.on('getOnlineUsers', () => {
+      io.emit('onlineUsers', usersManager.getNumUsers());
+    });
 
     socket.on('matchmaking', async topicId => {
       const quota = await quotaServices.getUserQuota({
@@ -159,8 +160,8 @@ function socket({
       if (room) {
         room.updateEndChat();
       }
-      // usersManager.deleteUser();
-      // io.emit('onlineUsers', usersManager.numUsers);
+      usersManager.deleteUser();
+      io.emit('onlineUsers', usersManager.getNumUsers());
       roomManager.deleteRoom(socket.data.roomId);
       await sessionServices.setSession(socket.data.username, false);
       io.to(socket.data.roomId).emit(
