@@ -28,4 +28,8 @@ export class ECPoint {
     isInfinity(): boolean {
         return this.x === BigInt(0) && this.y === BigInt(0);
     }
+
+    toString(): string {
+        return `(${this.x.toString(16)}, ${this.y.toString(16)})`;
+    }
 }

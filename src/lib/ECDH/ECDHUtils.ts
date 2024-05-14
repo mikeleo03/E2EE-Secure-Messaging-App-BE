@@ -1,4 +1,4 @@
-import { EllipticCurve, ECPoint } from './EllipticCurve';
+import { EllipticCurve, ECPoint } from '../ECC/EllipticCurve';
 
 function mod(n: bigint, p: bigint): bigint {
     return ((n % p) + p) % p;
