@@ -12,6 +12,16 @@ export class Block64 extends Block {
     }
 
     /**
+     * Creates a new 64-bit block with the given hexadecimal
+     * @param {string} hex
+     * @returns {Block64}
+     */
+    public static fromHex(hex: string): Block64 {
+        if (hex.length !== 16) throw new Error('Invalid hexadecimal length');
+        return new Block64(Block.hexToUint8Array(hex));
+    }
+
+    /**
      * Creates a new 64-bit blocks with the given hexadecimal
      * @param {string} hex
      * @returns {Block64[]}

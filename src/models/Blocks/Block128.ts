@@ -13,6 +13,16 @@ export class Block128 extends Block {
     }
 
     /**
+     * Creates a new 128-bit block with the given hexadecimal
+     * @param {string} hex
+     * @returns {Block128}
+     */
+    public static fromHex(hex: string): Block128 {
+        if (hex.length !== 32) throw new Error('Invalid hexadecimal length');
+        return new Block128(Block.hexToUint8Array(hex));
+    }
+
+    /**
      * Creates a new 128-bit blocks with the given hexadecimal
      * @param {string} hex
      * @returns {Block128[]}
