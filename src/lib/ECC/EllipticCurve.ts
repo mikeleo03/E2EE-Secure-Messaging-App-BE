@@ -1,3 +1,6 @@
+/**
+ * Class representing the parameters of an Elliptic Curve.
+ */
 export class EllipticCurve {
     a: bigint;
     b: bigint;
@@ -16,6 +19,9 @@ export class EllipticCurve {
     }
 }
 
+/**
+ * Class representing a point on the Elliptic Curve.
+ */
 export class ECPoint {
     x: bigint;
     y: bigint;
@@ -25,10 +31,18 @@ export class ECPoint {
         this.y = y;
     }
 
+    /**
+     * Checks if the point is the point at infinity.
+     * @returns {boolean} True if the point is at infinity, otherwise false.
+     */
     isInfinity(): boolean {
         return this.x === BigInt(0) && this.y === BigInt(0);
     }
 
+    /**
+     * Converts the point to a string representation.
+     * @returns {string} String representation of the point.
+     */
     toString(): string {
         return `(${this.x.toString(16)}, ${this.y.toString(16)})`;
     }
