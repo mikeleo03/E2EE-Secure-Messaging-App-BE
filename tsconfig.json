@@ -5,14 +5,18 @@
             "es6"
         ],
         "typeRoots": ["./src/types"],
-        "target": "ES2017",
+        "target": "ES2020",
         "module": "commonjs",
         "moduleResolution": "node",
         "outDir": "./build",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "sourceMap": true,
-        "rootDir": "./src"
+        "rootDir": "./src",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
     },
     "include": [
         "**/*"
