@@ -2,11 +2,11 @@ import { Block } from "./Block";
 
 export class Block64 extends Block {
     /**
-     * Creates a new 64-bit block with the given data. Privated to enforce the usage of fromHex and fromUnicode methods
+     * Creates a new 64-bit block with the given data
      * @param {Uint8Array} data
      * @constructor
      */
-    private constructor(data: Uint8Array) {
+    constructor(data: Uint8Array) {
         if (data.length !== 8) throw new Error('Invalid data length');
         super(data);
     }

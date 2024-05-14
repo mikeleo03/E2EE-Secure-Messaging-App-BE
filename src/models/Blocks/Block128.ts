@@ -1,12 +1,13 @@
 import { Block } from "./Block";
+import { Block64 } from "./Block64";
 
 export class Block128 extends Block {
     /**
-     * Creates a new 128-bit block with the given data. Privated to enforce the usage of fromHex and fromUnicode methods
+     * Creates a new 128-bit block with the given data
      * @param {Uint8Array} data
      * @constructor
      */
-    private constructor(data: Uint8Array) {
+    constructor(data: Uint8Array) {
         if (data.length !== 16) throw new Error('Invalid data length');
         super(data);
     }
@@ -66,6 +67,32 @@ export class Block128 extends Block {
         hex = Block.unpadHex(hex);
 
         return Block.hexToUnicode(hex);
+    }
+
+    /**
+     * Creates a new 128-bit block with the given halves
+     * @param {Block64} left
+     * @param {Block64} right
+     * @returns {Block128}
+     */
+    public static fromHalves(left: Block64, right: Block64): Block128 {
+        return new Block128(new Uint8Array([...left.getData(), ...right.getData()]));
+    }
+
+    /**
+     * Returns the left half of the block
+     * @returns {Block64}
+     */
+    public getLeftHalf(): Block64 {
+        return new Block64(this.getData().slice(0, 8));
+    }
+
+    /**
+     * Returns the right half of the block
+     * @returns {Block64}
+     */
+    public getRightHalf(): Block64 {
+        return new Block64(this.getData().slice(8, 16));
     }
     
     /**
