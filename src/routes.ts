@@ -9,6 +9,7 @@ import sessionController from './controllers/session.controller';
 import topicsController from './controllers/topics.controller';
 import usersController from './controllers/users.controller';
 import authMiddleware from './middleware/auth.middleware';
+import cryptoController from './controllers/crypto.controller';
 
 const routes = (app: Express) => {
   app.route('/').get((_, res) => {
@@ -122,6 +123,12 @@ const routes = (app: Express) => {
       authMiddleware.authBannedUserMiddleware,
       authMiddleware.authMiddleware,
       sessionController.getSession
+    );
+
+  app
+    .route('/test')
+    .post(
+      cryptoController.encryptCryptoNight
     );
 };
 
