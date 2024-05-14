@@ -1,5 +1,6 @@
 import { Block } from "../models/Blocks/Block";
 import { Block128 } from "../models/Blocks/Block128";
+import { Block64 } from "../models/Blocks/Block64";
 
 
 // CBC CryptoNight encryption/decryption algorithm
@@ -11,8 +12,9 @@ export class CryptoNight {
      * @returns {string}
      */
     public static async encrypt(plaintext: string, key: string): Promise<string> {
-        const block = Block128.fromUnicode(plaintext);
-        return block.getTextData();
+        const blocks = Block64.fromUnicodeLong(plaintext);
+        console.log(Block64.toUnicodeLong(blocks));
+        return plaintext;
     }
 
     /**

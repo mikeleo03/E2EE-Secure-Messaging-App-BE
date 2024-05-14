@@ -1,20 +1,21 @@
 export abstract class Block {
-    private _data: Uint32Array;
+    // private _data: Uint8Array;
+    private _data: Uint8Array;
 
     /**
      * Creates a new block with the given data
-     * @param {Uint32Array} data
+     * @param {Uint8Array} data
      * @constructor
      */
-    constructor(data: Uint32Array) {
+    constructor(data: Uint8Array) {
         this._data = data;
     }
 
     /**
      * Returns the data of the block
-     * @returns {Uint32Array}
+     * @returns {Uint8Array}
      */
-    public getData(): Uint32Array {
+    public getData(): Uint8Array {
         return this._data;
     }
 
@@ -23,7 +24,7 @@ export abstract class Block {
      * @returns {string}
      */
     public getHexData(): string {
-        return Block.uint32ArrayToHex(this._data);
+        return Block.uint8ArrayToHex(this._data);
     }
 
     /**
@@ -32,7 +33,7 @@ export abstract class Block {
      * @throws {Error} If the data is not a valid unicode
      */
     public getTextData(): string {
-        return Block.hexToUnicode(Block.uint32ArrayToHex(this._data));
+        return Block.hexToUnicode(this.getHexData());
     }
 
     /**
@@ -43,7 +44,6 @@ export abstract class Block {
     protected static unicodeToHex(text: string): string {
         let hex = '';
 
-        console.log(text);
         for (let i = 0; i < text.length; i++) {
             const codePoint: number = text.codePointAt(i);
 
@@ -58,43 +58,33 @@ export abstract class Block {
     }
 
     /**
-     * Converts the given hexadecimal to Uint32Array. Add padding to the end of the hexadecimal to make it divisible by 8
+     * Converts the given hexadecimal to Uint8Array
      * @param {string} hex
-     * @returns {Uint32Array}
+     * @returns {Uint8Array}
      */
-    protected static hexToUint32Array(hex: string): Uint32Array {
-        // Add padding with zeroes and number of padding in the back
-        const padLength = 8 - (hex.length % 8) - 1;
-        for (let i = 0; i < padLength; i++) hex += '0';
-        hex += padLength.toString(16);
-        
-        // Throw an error if the length of the hexadecimal is not divisible by 8
-        if (hex.length % 8 !== 0) throw new Error('Invalid hexadecimal length');
+    protected static hexToUint8Array(hex: string): Uint8Array {
+        if (hex.length % 2 !== 0) throw new Error('Invalid hexadecimal length');
 
-        const data = new Uint32Array(hex.length / 8);
+        const data = new Uint8Array(hex.length / 2);
 
         for (let i = 0; i < data.length; i++) {
-            data[i] = parseInt(hex.substring(i * 8, i * 8 + 8), 16);
+            data[i] = parseInt(hex.substring(i * 2, i * 2 + 2), 16);
         }
 
         return data;
     }
     
     /**
-     * Converts the given Uint32Array to hexadecimal. Remove padding from the hexadecimal end
-     * @param {Uint32Array} data
+     * Converts the given Uint8Array to hexadecimal. Remove padding from the hexadecimal end
+     * @param {Uint8Array} data
      * @returns {string}
      */
-    protected static uint32ArrayToHex(data: Uint32Array): string {
+    protected static uint8ArrayToHex(data: Uint8Array): string {
         let hex = '';
 
         for (let i = 0; i < data.length; i++) {
-            hex += data[i].toString(16);
+            hex += data[i].toString(16).padStart(2, '0');
         }
-
-        // Remove padding with zeroes and number of padding in the back
-        const padLength = parseInt(hex.charAt(hex.length - 1), 16);
-        hex = hex.substring(0, hex.length - 1 - padLength);
 
         return hex;
     }
@@ -113,6 +103,24 @@ export abstract class Block {
         }
 
         return text;
+    }
+
+    /**
+     * Add padding to the hexadecimal to make it multiple of the expected multiple. The padding size is added as the 2 last hexadecimal characters.
+     * @param {string} hex
+     * @param {number} expectedMultiple
+     * @returns {string}
+     */
+    protected static padHex(hex: string, expectedMultiple: number): string {
+        const padSize = (expectedMultiple - (hex.length + 2) % expectedMultiple) % expectedMultiple;
+        hex = hex.padEnd(hex.length + padSize, '0');
+        hex += padSize.toString(16).padStart(2, '0');
+        return hex;
+    }
+
+    protected static unpadHex(hex: string): string {
+        const padSize = parseInt(hex.substring(hex.length - 2), 16);
+        return hex.substring(0, hex.length - 2 - padSize);
     }
 
     /**

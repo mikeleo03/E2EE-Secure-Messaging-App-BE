@@ -16,6 +16,7 @@ const encryptCryptoNight: RequestHandler = async (
     const response = await cryptoServices.encryptCryptoNight(plaintext, key);
     res.json(response);
   } catch (error) {
+    console.log(error);
     res.status(400).json('Invalid plaintext or key');
   }
 };
