@@ -5,7 +5,7 @@
             "es6"
         ],
         "typeRoots": ["./src/types"],
-        "target": "ES2017",
+        "target": "ES2020",
         "module": "commonjs",
         "moduleResolution": "node",
         "outDir": "./build",
