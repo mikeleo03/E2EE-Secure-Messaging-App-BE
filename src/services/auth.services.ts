@@ -5,9 +5,9 @@ import {UserAccount} from './users.services';
 import { DLoginResponse, DUser, DUserFullData, DUsers } from '../utils/dev-user';
 import { Payload, signToken } from '../utils/jwt';
 
-const mainInstance = axios.create({
-  baseURL: config.mainApiUrl,
-});
+// const mainInstance = axios.create({
+//   baseURL: config.mainApiUrl,
+// });
 
 // const login = async (identifier: string, password: string) => {
 //   const response = await mainInstance.post('/auth/local', {
@@ -59,7 +59,7 @@ const validateAccount = async (
   const response = await usersServices.getUserAccount(token);
 
   if (response === null || typeof response === 'undefined') {
-    throw new Error('Failed to retieve user account');
+    throw new Error('Failed to retrieve user account');
   }
 
   if (!role.includes(response.role)) {
