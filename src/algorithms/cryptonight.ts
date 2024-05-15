@@ -2,6 +2,7 @@ import { Block } from "../models/Blocks/Block";
 import { Block128 } from "../models/Blocks/Block128";
 import { Block64 } from "../models/Blocks/Block64";
 import { fisherYatesShuffler } from "./fisher-yates";
+import { generateRoundKeys } from "./key-scheduling";
 import { inversePermutationString, permutationString } from "./permutation";
 import { roundFunction } from "./round-function";
 import { inverseShiftBlock, shiftBlock } from "./shift";
