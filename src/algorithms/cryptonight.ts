@@ -1,6 +1,7 @@
 import { Block } from "../models/Blocks/Block";
 import { Block128 } from "../models/Blocks/Block128";
 import { Block64 } from "../models/Blocks/Block64";
+import { feistelDecryptRound, feistelEncryptRound } from "./feistel";
 import { fisherYatesShuffler } from "./fisher-yates";
 import { generateRoundKeys } from "./key-scheduling";
 import { inversePermutationString, permutationString } from "./permutation";
@@ -45,20 +46,19 @@ export class CryptoNight {
         const result: Block128[] = [];
         for (let i = 0; i < blocks.length; i++) {
             console.log("Iteration: ", i);
-
-            let processed = permutationString(blocks[i]);
+            let processed = feistelEncryptRound(blocks[i], keyBlock);
             result.push(processed);
         }
 
         // Debug output decrypted
         const decryptedBlocks: Block128[] = [];
         for (let i = 0; i < result.length; i++) {
-            console.log("Decryption Iteration: ", i);
-
-            let processed = inversePermutationString(result[i]);
+            console.log("Iteration: ", i);
+            let processed = feistelDecryptRound(result[i], keyBlock);
             decryptedBlocks.push(processed);
         }
 
+        console.log(Block128.toHexLong(decryptedBlocks));
         console.log("Decrypted: ", Block128.toUnicodeLong(decryptedBlocks));
         return Block128.toUnicodeLong(decryptedBlocks);
     }

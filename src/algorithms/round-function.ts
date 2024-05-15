@@ -19,8 +19,9 @@ function hmacSHA256(data: string, key: string): string {
  * Feistel round function for CryptoNight Block Cipher
  */
 export function roundFunction(data: Block64, key: Block128): Block64 {
-    data = fisherYatesShuffler(data, key, false);
-    const hashResult = hmacSHA256(data.getHexData(), key.getHexData());
+    let processed_data = data.copy();
+    processed_data = fisherYatesShuffler(processed_data, key, false);
+    const hashResult = hmacSHA256(processed_data.getHexData(), key.getHexData());
 
     let result: string = "";
     for (let i = 0; i < hashResult.length / 4; i++) {
