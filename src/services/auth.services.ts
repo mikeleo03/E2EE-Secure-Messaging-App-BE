@@ -2,19 +2,55 @@ import axios from 'axios';
 import config from '../config';
 import usersServices from './users.services';
 import {UserAccount} from './users.services';
+import { DLoginResponse, DUser, DUserFullData, DUsers } from '../utils/dev-user';
+import { Payload, signToken } from '../utils/jwt';
 
 const mainInstance = axios.create({
   baseURL: config.mainApiUrl,
 });
 
-const login = async (identifier: string, password: string) => {
-  const response = await mainInstance.post('/auth/local', {
-    identifier,
-    password,
-  });
+// const login = async (identifier: string, password: string) => {
+//   const response = await mainInstance.post('/auth/local', {
+//     identifier,
+//     password,
+//   });
 
-  return response.data;
-};
+//   return response.data;
+// };
+
+// Temporary implementation
+// TODO: Implement this with proper authentication
+const login = async (identifier: string, password: string) => {
+  const userDatas: DUserFullData[] = DUsers;
+  const user = userDatas.find((user) => user.username === identifier);
+
+  if (user === undefined) {
+    throw new Error('Invalid identifier or password');
+  } else if (user.password !== password) {
+    throw new Error('Invalid identifier or password');
+  }
+
+  const payload: Payload = {
+    username: user.username,
+    email: user.email,
+  };
+
+  const token = signToken(payload);
+  const userRes: DUser = {
+    username: user.username,
+    name: user.name,
+    faculty: user.faculty,
+    campus: user.campus,
+    sex: user.sex,
+  };
+
+  const response: DLoginResponse = {
+    jwt: token,
+    user: userRes,
+  };
+
+  return response;
+}
 
 const validateAccount = async (
   token: string,
