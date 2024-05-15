@@ -118,10 +118,21 @@ export abstract class Block {
         return hex;
     }
 
+    /**
+     * Remove padding from the hexadecimal. The padding size is the 2 last hexadecimal characters.
+     * @param {string} hex
+     * @returns {string}
+     */
     protected static unpadHex(hex: string): string {
         const padSize = parseInt(hex.substring(hex.length - 2), 16);
         return hex.substring(0, hex.length - 2 - padSize);
     }
+
+    /**
+     * Create a copy of the block
+     * @returns {Block}
+     */
+    public abstract copy(): Block;
 
     /**
      * Perform XOR operation with other block

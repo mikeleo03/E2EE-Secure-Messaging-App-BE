@@ -13,6 +13,16 @@ export class Block128 extends Block {
     }
 
     /**
+     * Creates a new 128-bit block with the given hexadecimal
+     * @param {string} hex
+     * @returns {Block128}
+     */
+    public static fromHex(hex: string): Block128 {
+        if (hex.length !== 32) throw new Error('Invalid hexadecimal length');
+        return new Block128(Block.hexToUint8Array(hex));
+    }
+
+    /**
      * Creates a new 128-bit blocks with the given hexadecimal
      * @param {string} hex
      * @returns {Block128[]}
@@ -93,6 +103,20 @@ export class Block128 extends Block {
      */
     public getRightHalf(): Block64 {
         return new Block64(this.getData().slice(8, 16));
+    }
+
+    /**
+     * Create a copy of the block
+     * @returns {Block128}
+     */
+    public copy(): Block128 {
+        const data: Uint8Array = new Uint8Array(this.getData().length);
+
+        for (let i = 0; i < data.length; i++) {
+            data[i] = this.getData()[i];
+        }
+
+        return new Block128(data);
     }
     
     /**

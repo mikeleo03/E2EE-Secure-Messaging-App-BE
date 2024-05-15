@@ -12,6 +12,16 @@ export class Block64 extends Block {
     }
 
     /**
+     * Creates a new 64-bit block with the given hexadecimal
+     * @param {string} hex
+     * @returns {Block64}
+     */
+    public static fromHex(hex: string): Block64 {
+        if (hex.length !== 16) throw new Error('Invalid hexadecimal length');
+        return new Block64(Block.hexToUint8Array(hex));
+    }
+
+    /**
      * Creates a new 64-bit blocks with the given hexadecimal
      * @param {string} hex
      * @returns {Block64[]}
@@ -66,6 +76,20 @@ export class Block64 extends Block {
         hex = Block.unpadHex(hex);
 
         return Block.hexToUnicode(hex);
+    }
+
+    /**
+     * Create a copy of the block
+     * @returns {Block64}
+     */
+    public copy(): Block64 {
+        const data: Uint8Array = new Uint8Array(this.getData().length);
+
+        for (let i = 0; i < data.length; i++) {
+            data[i] = this.getData()[i];
+        }
+
+        return new Block64(data);
     }
     
     /**
