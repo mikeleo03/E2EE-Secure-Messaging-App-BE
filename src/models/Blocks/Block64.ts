@@ -77,6 +77,20 @@ export class Block64 extends Block {
 
         return Block.hexToUnicode(hex);
     }
+
+    /**
+     * Create a copy of the block
+     * @returns {Block64}
+     */
+    public copy(): Block64 {
+        const data: Uint8Array = new Uint8Array(this.getData().length);
+
+        for (let i = 0; i < data.length; i++) {
+            data[i] = this.getData()[i];
+        }
+
+        return new Block64(data);
+    }
     
     /**
      * Perform XOR operation with other block

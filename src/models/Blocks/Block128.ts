@@ -104,6 +104,20 @@ export class Block128 extends Block {
     public getRightHalf(): Block64 {
         return new Block64(this.getData().slice(8, 16));
     }
+
+    /**
+     * Create a copy of the block
+     * @returns {Block128}
+     */
+    public copy(): Block128 {
+        const data: Uint8Array = new Uint8Array(this.getData().length);
+
+        for (let i = 0; i < data.length; i++) {
+            data[i] = this.getData()[i];
+        }
+
+        return new Block128(data);
+    }
     
     /**
      * Perform XOR operation with other block

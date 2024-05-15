@@ -40,7 +40,7 @@ export class CryptoNight {
         const keyBlock: Block128 = Block128.fromHex(CryptoNight.preprocessKey(key));
         
         // Temporary use key as IV
-        const iv: Block128 = new Block128(keyBlock.getData());
+        const iv: Block128 = keyBlock.copy();
 
         console.log(Block128.toHexLong(blocks));
         const result: Block128[] = [];

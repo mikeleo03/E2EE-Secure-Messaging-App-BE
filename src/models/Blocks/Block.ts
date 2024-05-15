@@ -132,11 +132,7 @@ export abstract class Block {
      * Create a copy of the block
      * @returns {Block}
      */
-    public copy(): Block {
-        const data = new Uint8Array(this._data.length);
-        data.set(this._data);
-        return new (this.constructor as any)(data);
-    }
+    public abstract copy(): Block;
 
     /**
      * Perform XOR operation with other block
