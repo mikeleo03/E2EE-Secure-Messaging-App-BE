@@ -2,6 +2,8 @@ import { Block } from "../models/Blocks/Block";
 import { Block128 } from "../models/Blocks/Block128";
 import { Block64 } from "../models/Blocks/Block64";
 import { fisherYatesShuffler } from "./fisher-yates";
+import { inversePermutationString, permutationString } from "./permutation";
+import { roundFunction } from "./round-function";
 import { inverseShiftBlock, shiftBlock } from "./shift";
 import { inverseSubstitute, substitute } from "./substitution";
 
@@ -43,16 +45,7 @@ export class CryptoNight {
         for (let i = 0; i < blocks.length; i++) {
             console.log("Iteration: ", i);
 
-            let left: Block64 = blocks[i].getLeftHalf();
-            let right: Block64 = blocks[i].getRightHalf();
-
-            console.log(left.getHexData());
-            console.log(right.getHexData());
-
-            left = fisherYatesShuffler(left, keyBlock, false);
-            right = fisherYatesShuffler(right, keyBlock, false);
-
-            let processed: Block128 = Block128.fromHalves(left, right);
+            let processed = permutationString(blocks[i]);
             result.push(processed);
         }
 
@@ -61,21 +54,12 @@ export class CryptoNight {
         for (let i = 0; i < result.length; i++) {
             console.log("Decryption Iteration: ", i);
 
-            let left: Block64 = result[i].getLeftHalf();
-            let right: Block64 = result[i].getRightHalf();
-
-            console.log(left.getHexData());
-            console.log(right.getHexData());
-
-            left = fisherYatesShuffler(left, keyBlock, true);
-            right = fisherYatesShuffler(right, keyBlock, true);
-
-            let processed: Block128 = Block128.fromHalves(left, right);
+            let processed = inversePermutationString(result[i]);
             decryptedBlocks.push(processed);
         }
 
         console.log("Decrypted: ", Block128.toUnicodeLong(decryptedBlocks));
-        return plaintext;
+        return Block128.toUnicodeLong(decryptedBlocks);
     }
 
     /**
