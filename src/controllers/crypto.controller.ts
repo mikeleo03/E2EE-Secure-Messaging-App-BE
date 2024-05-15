@@ -6,14 +6,14 @@ interface RequestWithBody<T> extends Request {
   body: T;
 }
 
-const encryptCryptoNight: RequestHandler = async (
+const encryptCryptoNightToHex: RequestHandler = async (
   req: RequestWithBody<{ plaintext: string; key: string }>,
   res
 ) => {
   const { plaintext, key } = req.body;
 
   try {
-    const response = await cryptoServices.encryptCryptoNight(plaintext, key);
+    const response = await cryptoServices.encryptCryptoNightToHex(plaintext, key);
     res.json(response);
   } catch (error) {
     console.log(error);
@@ -21,14 +21,14 @@ const encryptCryptoNight: RequestHandler = async (
   }
 };
 
-const decryptCryptoNight: RequestHandler = async (
+const decryptCryptoNightFromHex: RequestHandler = async (
   req: RequestWithBody<{ ciphertext: string; key: string }>,
   res
 ) => {
   const { ciphertext, key } = req.body;
 
   try {
-    const response = await cryptoServices.decryptCryptoNight(ciphertext, key);
+    const response = await cryptoServices.decryptCryptoNightFromHex(ciphertext, key);
     res.json(response);
   } catch (error) {
     res.status(400).json('Invalid ciphertext or key');
@@ -36,6 +36,6 @@ const decryptCryptoNight: RequestHandler = async (
 };
 
 export default {
-  encryptCryptoNight,
-  decryptCryptoNight,
+  encryptCryptoNightToHex,
+  decryptCryptoNightFromHex,
 };

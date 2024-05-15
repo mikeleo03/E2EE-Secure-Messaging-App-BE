@@ -1,21 +1,24 @@
 import { CryptoNight } from "../algorithms/cryptonight";
 
-
-const encryptCryptoNight = async (
+const encryptCryptoNightToHex = async (
     plaintext: string,
     key: string
-): Promise<string> => {
-    return CryptoNight.encrypt(plaintext, key);
+): Promise<{ encrypted: string }> => {
+    return {
+        encrypted: await CryptoNight.encryptToHex(plaintext, key),
+    };
 };
 
-const decryptCryptoNight = async (
+const decryptCryptoNightFromHex = async (
     ciphertext: string,
     key: string
-): Promise<string> => {
-    return CryptoNight.decrypt(ciphertext, key);
+): Promise<{ decrypted: string }> => {
+    return {
+        decrypted: await CryptoNight.decryptFromHex(ciphertext, key),
+    };
 };
 
 export default {
-    encryptCryptoNight,
-    decryptCryptoNight,
+    encryptCryptoNightToHex,
+    decryptCryptoNightFromHex,
 };

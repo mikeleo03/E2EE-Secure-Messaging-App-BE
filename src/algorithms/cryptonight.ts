@@ -35,32 +35,28 @@ export class CryptoNight {
      * @param {string} key
      * @returns {string}
      */
-    public static async encrypt(plaintext: string, key: string): Promise<string> {
+    public static async encryptToHex(plaintext: string, key: string): Promise<string> {
         const blocks: Block128[] = Block128.fromUnicodeLong(plaintext);
-        const keyBlock: Block128 = Block128.fromHex(CryptoNight.preprocessKey(key));
+        const keyBlocks: Block128[] = Block128.fromUnicodeLong(key);
+        const keyBlock: Block128 = Block128.fromHex(CryptoNight.preprocessKey(keyBlocks[0].getHexData()));
         
         // Temporary use key as IV
         const iv: Block128 = keyBlock.copy();
 
-        console.log(Block128.toHexLong(blocks));
-        const result: Block128[] = [];
+        let result: Block128[] = [];
+        let previousBlock: Block128 = iv.copy();
+
         for (let i = 0; i < blocks.length; i++) {
-            console.log("Iteration: ", i);
-            let processed = feistelEncryptRound(blocks[i], keyBlock);
-            result.push(processed);
+            let encryptedBlock: Block128 = blocks[i].copy();
+            encryptedBlock = encryptedBlock.xor(previousBlock);
+            encryptedBlock = encryptedBlock.xor(keyBlock);
+            encryptedBlock = await CryptoNight.encryptBlock(encryptedBlock, keyBlock, 16);
+            previousBlock = encryptedBlock.copy();
+            
+            result.push(encryptedBlock);
         }
 
-        // Debug output decrypted
-        const decryptedBlocks: Block128[] = [];
-        for (let i = 0; i < result.length; i++) {
-            console.log("Iteration: ", i);
-            let processed = feistelDecryptRound(result[i], keyBlock);
-            decryptedBlocks.push(processed);
-        }
-
-        console.log(Block128.toHexLong(decryptedBlocks));
-        console.log("Decrypted: ", Block128.toUnicodeLong(decryptedBlocks));
-        return Block128.toUnicodeLong(decryptedBlocks);
+        return Block128.toHexLong(result);
     }
 
     /**
@@ -69,7 +65,69 @@ export class CryptoNight {
      * @param {string} key
      * @returns {string}
      */
-    public static async decrypt(ciphertext: string, key: string): Promise<string> {
-        return ciphertext;
+    public static async decryptFromHex(ciphertext: string, key: string): Promise<string> {
+        const blocks: Block128[] = Block128.fromHexLong(ciphertext);
+        const keyBlocks: Block128[] = Block128.fromUnicodeLong(key);
+        const keyBlock: Block128 = Block128.fromHex(CryptoNight.preprocessKey(keyBlocks[0].getHexData()));
+        
+        // Temporary use key as IV
+        const iv: Block128 = keyBlock.copy();
+
+        let result: Block128[] = []
+        let previousBlock: Block128 = iv.copy();
+
+        for (let i = 0; i < blocks.length; i++) {
+            let decryptBlock: Block128 = blocks[i].copy();
+            decryptBlock = await CryptoNight.decryptBlock(decryptBlock, keyBlock, 16);
+            decryptBlock = decryptBlock.xor(keyBlock);
+            decryptBlock = decryptBlock.xor(previousBlock);
+            previousBlock = blocks[i].copy();
+            
+            result.push(decryptBlock);
+        }
+
+        return Block128.toUnicodeLong(result);
+    }
+
+    /**
+     * Encrypts a block using the CryptoNight algorithm
+     * @param {Block128} data
+     * @param {Block128} key
+     * @param {number} rounds
+     * @returns {Block128}
+     */
+    private static async encryptBlock(data: Block128, key: Block128, rounds: number): Promise<Block128> {
+        let result: Block128 = data.copy();
+        const roundKeys: Block128[] = generateRoundKeys(key, rounds);
+
+        for (let i = 0; i < rounds; i++) {
+            result = permutationString(result);
+            result = feistelEncryptRound(result, roundKeys[i]);
+            result = substitute(result);
+            result = shiftBlock(result, (i + 1) % 16);
+        }
+
+        return result;
+    }
+
+    /**
+     * Decrypts a block using the CryptoNight algorithm
+     * @param {Block128} data
+     * @param {Block128} key
+     * @param {number} rounds
+     * @returns {Block128}
+     */
+    private static async decryptBlock(data: Block128, key: Block128, rounds: number): Promise<Block128> {
+        let result: Block128 = data.copy();
+        const roundKeys: Block128[] = generateRoundKeys(key, rounds);
+
+        for (let i = rounds - 1; i >= 0; i--) {
+            result = inverseShiftBlock(result, (i + 1) % 16);
+            result = inverseSubstitute(result);
+            result = feistelDecryptRound(result, roundKeys[i]);
+            result = inversePermutationString(result);
+        }
+
+        return result;
     }
 }

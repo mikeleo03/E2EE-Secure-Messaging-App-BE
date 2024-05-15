@@ -128,7 +128,19 @@ const routes = (app: Express) => {
   app
     .route('/test')
     .post(
-      cryptoController.encryptCryptoNight
+      cryptoController.encryptCryptoNightToHex
+    );
+
+  app
+    .route('/crypto/cryptonight/encrypt')
+    .post(
+      cryptoController.encryptCryptoNightToHex
+    );
+
+  app
+    .route('/crypto/cryptonight/decrypt')
+    .post(
+      cryptoController.decryptCryptoNightFromHex
     );
 };
 
