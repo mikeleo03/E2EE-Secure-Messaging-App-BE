@@ -46,7 +46,7 @@ export function fisherYatesShuffler(
 ): Block64 {
     const rng: seedrandom.PRNG = seedrandom(seed.getHexData());
     const size: number = data.getData().length;
-    const result: Block64 = new Block64(data.getData());
+    const result: Block64 = data.copy();
 
     const randomList: number[] = [];    
     randomList.push(0);
