@@ -15,4 +15,5 @@ export default {
   },
   activeRole: process.env.ACTIVE_ROLE ? process.env.ACTIVE_ROLE.split(',') : [],
   adminRole: process.env.ADMIN_ROLE || 'Committee',
+  jwtSecret: process.env.JWT_SECRET || 'secret',
 };
