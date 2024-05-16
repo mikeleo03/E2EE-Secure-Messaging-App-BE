@@ -64,33 +64,30 @@ function simpleDecrypt(ciphertext: Buffer, key: Buffer): string {
 /**
  * Encrypts a message using ECC.
  * @param {string} message - The message to encrypt.
- * @param {ECPoint} publicKey - The recipient's public key.
- * @param {EllipticCurve} curve - The elliptic curve parameters.
- * @returns {object} An object containing the ciphertext and ephemeral public key.
+ * @param {ECPoint} targetpublicKey - The recipient's public key.
+ * @param {bigint} senderprivatekey - The sender's private key.
+ * @returns {Buffer} A buffer containing the ciphertext.
  */
-export function encryptMessage(message: string, publicKey: ECPoint, curve: EllipticCurve): { ciphertext: Buffer, ephemeralPublicKey: ECPoint } {
-    const ephemeralKeyPair = generateKeyPair(curve);
-    const sharedSecret = computeSharedSecret(ephemeralKeyPair.privateKey, publicKey, curve);
+export function encryptMessage(message: string, targetpublicKey: ECPoint, senderprivatekey: bigint): Buffer {
+    const curve = new EllipticCurve();
+    const sharedSecret = computeSharedSecret(senderprivatekey, targetpublicKey, curve);
     const encryptionKey = deriveKeys(sharedSecret);
 
     const ciphertext = simpleEncrypt(message, encryptionKey);
 
-    return {
-        ciphertext: ciphertext,
-        ephemeralPublicKey: ephemeralKeyPair.publicKey
-    };
+    return ciphertext;
 }
 
 /**
  * Decrypts a message encrypted with ECC.
  * @param {Buffer} ciphertext - The ciphertext to decrypt.
- * @param {ECPoint} ephemeralPublicKey - The ephemeral public key used for encryption.
- * @param {bigint} privateKey - The recipient's private key.
- * @param {EllipticCurve} curve - The elliptic curve parameters.
+ * @param {ECPoint} senderpublicKey - The sender's public key used for encryption.
+ * @param {bigint} targetprivateKey - The recipient's private key.
  * @returns {string} The decrypted plaintext message.
  */
-export function decryptMessage(ciphertext: Buffer, ephemeralPublicKey: ECPoint, privateKey: bigint, curve: EllipticCurve): string {
-    const sharedSecret = computeSharedSecret(privateKey, ephemeralPublicKey, curve);
+export function decryptMessage(ciphertext: Buffer, senderpublicKey: ECPoint, targetprivateKey: bigint): string {
+    const curve = new EllipticCurve();
+    const sharedSecret = computeSharedSecret(targetprivateKey, senderpublicKey, curve);
     const encryptionKey = deriveKeys(sharedSecret);
 
     return simpleDecrypt(ciphertext, encryptionKey);
