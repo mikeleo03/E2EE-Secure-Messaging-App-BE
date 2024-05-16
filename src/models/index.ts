@@ -6,5 +6,6 @@ import {RequestTopic} from './RequestTopic';
 import {Topic} from './Topic';
 import {BannedUser} from './BannedUser';
 import {Session} from './Session';
+import {SharedKey} from './SharedKey';
 
-export {Topic, RequestTopic, Chat, Message, Report, Quota, BannedUser, Session};
+export {Topic, RequestTopic, Chat, Message, Report, Quota, BannedUser, Session, SharedKey};

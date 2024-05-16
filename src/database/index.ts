@@ -10,6 +10,7 @@ import {
   Quota,
   BannedUser,
   Session,
+  SharedKey
 } from '../models';
 
 export const db = new DataSource({
@@ -30,6 +31,7 @@ export const db = new DataSource({
     Quota,
     BannedUser,
     Session,
+    SharedKey
   ],
   migrations: [],
   subscribers: [],
