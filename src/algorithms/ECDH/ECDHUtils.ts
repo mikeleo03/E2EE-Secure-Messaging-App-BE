@@ -1,5 +1,5 @@
 import { EllipticCurve, ECPoint } from '../ECC/EllipticCurve';
-import { mod, inverseMod, getRandomBigInt } from '../Math/MathUtil';
+import { mod, inverseMod, getRandomBigInt } from '../Utils/Math';
 
 /**
  * Adds two points on the elliptic curve.
