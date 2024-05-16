@@ -8,7 +8,7 @@ import { mod, inverseMod, getRandomBigInt } from '../Utils/Math';
  * @param {EllipticCurve} curve - The elliptic curve parameters.
  * @returns {ECPoint} The result of adding p1 and p2.
  */
-function ecAdd(p1: ECPoint, p2: ECPoint, curve: EllipticCurve): ECPoint {
+export function ecAdd(p1: ECPoint, p2: ECPoint, curve: EllipticCurve): ECPoint {
     if (p1.isInfinity()) return p2;
     if (p2.isInfinity()) return p1;
 
@@ -38,7 +38,7 @@ function ecAdd(p1: ECPoint, p2: ECPoint, curve: EllipticCurve): ECPoint {
  * @param {EllipticCurve} curve - The elliptic curve parameters.
  * @returns {ECPoint} The result of multiplying the point by the scalar.
  */
-function ecMultiply(point: ECPoint, scalar: bigint, curve: EllipticCurve): ECPoint {
+export function ecMultiply(point: ECPoint, scalar: bigint, curve: EllipticCurve): ECPoint {
     let result = new ECPoint(BigInt(0), BigInt(0)); // Point at infinity
     let addend = point;
 
@@ -73,4 +73,56 @@ export function generateKeyPair(curve: EllipticCurve): { privateKey: bigint, pub
  */
 export function computeSharedSecret(privateKey: bigint, publicKey: ECPoint, curve: EllipticCurve): ECPoint {
     return ecMultiply(publicKey, privateKey, curve);
+}
+
+/**
+ * A very basic hash function.
+ * @param {string} data - The input data.
+ * @returns {string} The hash of the input data.
+ */
+export function simpleHash(data: string): string {
+    let hash = 0;
+    for (let i = 0; i < data.length; i++) {
+        hash = (hash << 5) - hash + data.charCodeAt(i);
+        hash |= 0;
+    }
+    return hash.toString(16).padStart(8, '0');
+}
+
+/**
+ * Derives encryption key from the shared secret.
+ * @param {ECPoint} sharedSecret - The shared secret.
+ * @returns {string} A string containing the encryption key.
+ */
+export function deriveKeys(sharedSecret: ECPoint): string {
+    const sharedSecretHex = sharedSecret.x.toString(16).padStart(64, '0') + sharedSecret.y.toString(16).padStart(64, '0');
+    const hash = simpleHash(sharedSecretHex);
+
+    return hash.slice(0, 16);  // 128-bit encryption key
+}
+
+/**
+ * A very basic hash function.
+ * @param {string} data - The input data.
+ * @returns {Buffer} The hash of the input data.
+ */
+export function simpleHashBuffer(data: string): Buffer {
+    let hash = 0;
+    for (let i = 0; i < data.length; i++) {
+        hash = (hash << 5) - hash + data.charCodeAt(i);
+        hash |= 0;
+    }
+    return Buffer.from(hash.toString(16).padStart(8, '0'), 'hex');
+}
+
+/**
+ * Derives encryption key from the shared secret.
+ * @param {ECPoint} sharedSecret - The shared secret.
+ * @returns {Buffer} A buffer containing the encryption key.
+ */
+export function deriveKeysBuffer(sharedSecret: ECPoint): Buffer {
+    const sharedSecretHex = sharedSecret.x.toString(16).padStart(64, '0') + sharedSecret.y.toString(16).padStart(64, '0');
+    const hash = simpleHashBuffer(sharedSecretHex);
+
+    return hash.slice(0, 16);  // 128-bit encryption key
 }
