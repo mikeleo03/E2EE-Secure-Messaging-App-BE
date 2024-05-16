@@ -10,6 +10,7 @@ import topicsController from './controllers/topics.controller';
 import usersController from './controllers/users.controller';
 import authMiddleware from './middleware/auth.middleware';
 import cryptoController from './controllers/crypto.controller';
+import sharedKeyController from './controllers/sharedKey.controller';
 
 const routes = (app: Express) => {
   app.route('/').get((_, res) => {
@@ -142,6 +143,23 @@ const routes = (app: Express) => {
     .post(
       cryptoController.decryptCryptoNightFromHex
     );
+
+  // ECDH API
+  app
+    .route('/sharedKey')
+    .get(sharedKeyController.getSharedKeyByUser);
+
+  app
+    .route('/sharedKey')
+    .post(sharedKeyController.storeSharedKey);
+
+  app
+    .route('/sharedKey')
+    .put(sharedKeyController.updateSharedKey);
+
+  app
+    .route('/sharedKey')
+    .delete(sharedKeyController.deleteSharedKey);
 };
 
 export default routes;
