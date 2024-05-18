@@ -118,6 +118,8 @@ function socket({
         const room = roomManager.getRoom(socket.data.roomId);
         const message = await room.createMessage(socket.data.username, content);
 
+        // TODO : nerima dari A, encrypt ke B
+
         io.to(socket.data.roomId).emit('message', {
           content: message.message,
           from: socket.id,
