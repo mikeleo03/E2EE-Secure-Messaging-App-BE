@@ -27,6 +27,7 @@ const generateSharedKey = async (params: {
         const serverKeys = generateKeyPair(curve);
 
         // Compute shared secrets
+        const userSharedSecret = computeSharedSecret(userKeys.privateKey, serverKeys.publicKey, curve);
         const userServerSharedSecret = computeSharedSecret(serverKeys.privateKey, userKeys.publicKey, curve);
 
         // Save User's shared key to a file
@@ -57,6 +58,12 @@ const generateSharedKey = async (params: {
                 sharedY: userServerSharedSecret.y.toString(),
                 stored_datetime: new Date()
             });
+        }
+
+        if (userSharedSecret.x === userServerSharedSecret.x && userSharedSecret.y === userServerSharedSecret.y) {
+            console.log(`🟩 Shared key with ${params.username} succesfully generated and validated.`);
+        } else {
+            console.log(`🟥 Shared key with ${params.username} generation and validation failed.`);
         }
 
         return 200;
