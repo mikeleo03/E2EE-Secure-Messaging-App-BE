@@ -6,7 +6,7 @@ export interface ServerToClientEvents {
     username2: string;
     name2: string;
   }) => void;
-  message: (payload: { encrypted: string }) => Promise<void>;
+  messageReceive: (payload: { encrypted: string }) => Promise<void>;
   messageFail: (payload: {error: string}) => void;
   endChat: (message: string) => void;
   onlineUsers: (onlineUsers: number) => void;

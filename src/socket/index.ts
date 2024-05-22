@@ -154,7 +154,7 @@ function socket({
           const { sharedX, sharedY } = sharedKey;
           const sharedSecret = new ECPoint(BigInt(sharedX as string), BigInt(sharedY as string));
 
-          // Server decrypts the message from Alice
+          // Server decrypts the message from Sender
           plaintextUserServer = await CryptoNight.decryptFromHex(encrypted, deriveKeys(sharedSecret));
           console.log('Decrypted (Sender-Server):', plaintextUserServer);
         }
@@ -164,9 +164,9 @@ function socket({
 
         // SERVER SENDING MESSAGE PROTOCOL
         // Get the shared keys from database
+        const username1 = room.users[0];
         const username2 = room.users[1];
-        const name2 = room.getUsersName(username2)
-        const sharedKey2 = await sharedKeyServices.getSharedKeyByUser(name2);
+        const sharedKey2 = await sharedKeyServices.getSharedKeyByUser(socket.data.username == username1 ? username2 : username1);
         if (sharedKey2) {
           const { sharedX, sharedY } = sharedKey2;
           const sharedSecret2 = new ECPoint(BigInt(sharedX as string), BigInt(sharedY as string));
@@ -176,7 +176,7 @@ function socket({
           const ciphertextAliceServer = await CryptoNight.encryptToHex(data, deriveKeys(sharedSecret2));
           console.log('Encrypted (Server-Receiver):', ciphertextAliceServer);
 
-          io.to(socket.data.roomId).emit('message', { encrypted: ciphertextAliceServer });
+          io.to(socket.data.roomId).emit('messageReceive', { encrypted: ciphertextAliceServer });
         }
       } catch (e) {
         let errorMessage: string;
