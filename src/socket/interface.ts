@@ -22,7 +22,7 @@ export interface ClientToServerEvents {
   matchmaking: (topicId: string) => Promise<void>;
   matchNotFound: (topicId: string) => void;
   revealName: () => void;
-  message: (payload: {content: string}) => Promise<void>;
+  message: (payload: { encrypted: string }) => Promise<void>;
   endChat: () => void;
   getOnlineUsers: () => void;
   leaveRoom: () => void;

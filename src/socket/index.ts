@@ -142,10 +142,10 @@ function socket({
       }
     });
 
-    socket.on('message', async ({content}) => {
+    socket.on('message', async ({ encrypted }) => {
       try {
         const room = roomManager.getRoom(socket.data.roomId);
-        const message = await room.createMessage(socket.data.username, content);
+        const message = await room.createMessage(socket.data.username, encrypted);
 
         // TODO : nerima dari A, encrypt ke B
 
