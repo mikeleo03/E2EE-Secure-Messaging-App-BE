@@ -1,3 +1,5 @@
+import { ECPoint } from "../algorithms/ECC/EllipticCurve";
+
 export interface ServerToClientEvents {
   matched: (roomId: string) => void;
   revealName: (payload: {
@@ -13,6 +15,7 @@ export interface ServerToClientEvents {
   quotaExceeded: () => void;
   continueMatch: () => void;
   finishLoading: () => void;
+  handshakeClient: (publicKey: string) => void;
 }
 
 export interface ClientToServerEvents {
@@ -23,6 +26,7 @@ export interface ClientToServerEvents {
   endChat: () => void;
   getOnlineUsers: () => void;
   leaveRoom: () => void;
+  handshakeServer: (publicKey: string) => void;
 }
 
 export interface SocketData {
