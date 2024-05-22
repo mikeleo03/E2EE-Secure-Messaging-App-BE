@@ -7,6 +7,7 @@ import socket from './socket';
 import routes from './routes';
 // eslint-disable-next-line node/no-extraneous-import
 import * as cors from 'cors';
+import topicsServices from './services/topics.services';
 
 const app = express();
 
@@ -52,6 +53,7 @@ const io = new Server(httpServer, {
 httpServer.listen(config.port, config.host, async () => {
   // Initialize db
   await db.initialize();
+  await topicsServices.initializeTopics();
 
   console.log(`🚀 Server is listening on http://${config.host}:${config.port}`);
 
