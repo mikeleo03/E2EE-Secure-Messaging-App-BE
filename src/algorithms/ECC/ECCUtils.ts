@@ -1,4 +1,4 @@
-import { EllipticCurve, ECPoint } from './EllipticCurve';
+import { ECPoint } from './EllipticCurve';
 import { deriveKeysBuffer, generateKeyPair, computeSharedSecret } from '../ECDH/ECDHUtils';
 
 /**
@@ -39,33 +39,24 @@ function simpleDecrypt(ciphertext: Buffer, key: Buffer): string {
  * Encrypts a message using ECC.
  * @param {string} message - The message to encrypt.
  * @param {ECPoint} publicKey - The recipient's public key.
- * @param {EllipticCurve} curve - The elliptic curve parameters.
- * @returns {object} An object containing the ciphertext and ephemeral public key.
+ * @returns {Buffer} The encrypted ciphertext.
  */
-export function encryptMessage(message: string, publicKey: ECPoint, curve: EllipticCurve): { ciphertext: Buffer, ephemeralPublicKey: ECPoint } {
-    const ephemeralKeyPair = generateKeyPair(curve);
-    const sharedSecret = computeSharedSecret(ephemeralKeyPair.privateKey, publicKey, curve);
-    const encryptionKey = deriveKeysBuffer(sharedSecret);
+export function encryptMessage(message: string, publicKey: ECPoint): Buffer {
+    const key = deriveKeysBuffer(publicKey);
+    const ciphertext = simpleEncrypt(message, key);
 
-    const ciphertext = simpleEncrypt(message, encryptionKey);
-
-    return {
-        ciphertext: ciphertext,
-        ephemeralPublicKey: ephemeralKeyPair.publicKey
-    };
+    return ciphertext;
 }
 
 /**
  * Decrypts a message encrypted with ECC.
  * @param {Buffer} ciphertext - The ciphertext to decrypt.
- * @param {ECPoint} ephemeralPublicKey - The ephemeral public key used for encryption.
  * @param {bigint} privateKey - The recipient's private key.
- * @param {EllipticCurve} curve - The elliptic curve parameters.
  * @returns {string} The decrypted plaintext message.
  */
-export function decryptMessage(ciphertext: Buffer, ephemeralPublicKey: ECPoint, privateKey: bigint, curve: EllipticCurve): string {
-    const sharedSecret = computeSharedSecret(privateKey, ephemeralPublicKey, curve);
-    const encryptionKey = deriveKeysBuffer(sharedSecret);
+export function decryptMessage(ciphertext: Buffer, privateKey: ECPoint): string {
+    const key = deriveKeysBuffer(privateKey);
+    const decrypted = simpleDecrypt(ciphertext, key);
 
-    return simpleDecrypt(ciphertext, encryptionKey);
+    return decrypted;
 }
