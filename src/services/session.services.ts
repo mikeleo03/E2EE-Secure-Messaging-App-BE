@@ -20,7 +20,14 @@ const checkSession = async (username: string) => {
       return newSession.isLoggedIn;
     }
 
-    return session.isLoggedIn;
+    if (session.isLoggedIn) {
+      await sessionRepository.save({
+        user_id: username,
+        isLoggedIn: false,
+      });
+    }
+
+    return false;
   } catch (error) {
     console.error('Session Error:', error);
     return true;
