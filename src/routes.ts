@@ -143,23 +143,6 @@ const routes = (app: Express) => {
     .post(
       cryptoController.decryptCryptoNightFromHex
     );
-
-  // ECDH API
-  app
-    .route('/sharedKey')
-    .get(sharedKeyController.getSharedKeyByUser);
-
-  app
-    .route('/sharedKey')
-    .post(sharedKeyController.storeSharedKey);
-
-  app
-    .route('/sharedKey')
-    .put(sharedKeyController.updateSharedKey);
-
-  app
-    .route('/sharedKey')
-    .delete(sharedKeyController.deleteSharedKey);
 };
 
 export default routes;

@@ -12,6 +12,7 @@ import matchmakingManager from './matchmakingManager';
 import Room from './room';
 import roomManager from './roomManager';
 import usersManager from './usersManager';
+import sharedKeyServices from '../services/sharedKey.services';
 
 function socket({
   io,
@@ -88,6 +89,10 @@ function socket({
 
           await quotaServices.updateUserQuota({username: user1.data.username});
           await quotaServices.updateUserQuota({username: user2.data.username});
+
+          await sharedKeyServices.generateSharedKey({username: user1.data.username});
+          await sharedKeyServices.generateSharedKey({username: user2.data.username});
+          
           io.to(chatroomId).emit('matched', newRoom.roomId);
         }
       }

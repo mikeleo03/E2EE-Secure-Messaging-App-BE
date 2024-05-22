@@ -21,43 +21,21 @@ const getSharedKeyByUser: RequestHandler = async (
     }
 };
 
-const storeSharedKey: RequestHandler = async (
-    req: RequestWithBody<{ user_id: string; sharedX: string, sharedY: string }>,
+const generateSharedKey: RequestHandler = async (
+    req: RequestWithBody<{ username: string }>,
     res
 ) => {
-    const { user_id, sharedX, sharedY } = req.body;
+    const { username } = req.body;
 
     try {
-        const response = await sharedKeyServices.storeSharedKey({
-            user_id: user_id,
-            sharedX: sharedX,
-            sharedY: sharedY
+        const response = await sharedKeyServices.generateSharedKey({
+            username: username,
         });
 
         res.json(response);
     } catch (error) {
         console.log(error);
         res.status(400).json('Error while storing the shared key');
-    }
-};
-
-const updateSharedKey: RequestHandler = async (
-    req: RequestWithBody<{ user_id: string; sharedX: string, sharedY: string }>,
-    res
-) => {
-    const { user_id, sharedX, sharedY } = req.body;
-
-    try {
-        const response = await sharedKeyServices.updateSharedKey({
-            user_id: user_id,
-            sharedX: sharedX,
-            sharedY: sharedY
-        });
-
-        res.json(response);
-    } catch (error) {
-        console.log(error);
-        res.status(400).json('Error while updating the shared key');
     }
 };
 
@@ -81,7 +59,6 @@ const deleteSharedKey: RequestHandler = async (
 
 export default {
     getSharedKeyByUser,
-    storeSharedKey,
-    updateSharedKey,
+    generateSharedKey,
     deleteSharedKey,
 };
