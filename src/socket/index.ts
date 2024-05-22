@@ -13,6 +13,8 @@ import Room from './room';
 import roomManager from './roomManager';
 import usersManager from './usersManager';
 import sharedKeyServices from '../services/sharedKey.services';
+import { ECPoint, EllipticCurve } from '../algorithms/ECC/EllipticCurve';
+import { computeSharedSecret, generateKeyPair } from '../algorithms/ECDH/ECDHUtils';
 
 function socket({
   io,
@@ -41,6 +43,31 @@ function socket({
 
     socket.on('getOnlineUsers', () => {
       io.emit('onlineUsers', usersManager.getNumUsers());
+    });
+
+    socket.on('handshakeServer', async (userPublicKey: string) => {
+      // HANDSAKING
+      // RECEIVE ACK FROM CLIENT
+      // Define the curve
+      console.log(userPublicKey);
+      const curve = new EllipticCurve();
+
+      // Server's key pair
+      const serverKeys = generateKeyPair(curve);
+      
+      // SEND SERVER KEY TO CLIENT
+      io.emit('handshakeClient', serverKeys.publicKey.toString());
+
+      // HANDSHAKE DONE
+      // Calculate shared secret
+      const userPublic = ECPoint.fromString(userPublicKey);
+      const userServerSharedSecret = computeSharedSecret(serverKeys.privateKey, userPublic, curve);
+      // Store the key on database
+      await sharedKeyServices.storeSharedKey({ 
+        username: socket.data.username,
+        sharedX: userServerSharedSecret.x.toString(),
+        sharedY: userServerSharedSecret.y.toString(),
+      });
     });
 
     socket.on('matchmaking', async topicId => {
@@ -89,9 +116,6 @@ function socket({
 
           await quotaServices.updateUserQuota({username: user1.data.username});
           await quotaServices.updateUserQuota({username: user2.data.username});
-
-          await sharedKeyServices.generateSharedKey({username: user1.data.username});
-          await sharedKeyServices.generateSharedKey({username: user2.data.username});
           
           io.to(chatroomId).emit('matched', newRoom.roomId);
         }
