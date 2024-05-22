@@ -46,4 +46,20 @@ export class ECPoint {
     toString(): string {
         return `(${this.x.toString(16)}, ${this.y.toString(16)})`;
     }
+
+    /**
+     * Create new ECPoint from a string representation.
+     * @param {string} str - The string representation of the point.
+     * @returns {ECPoint} The ECPoint object.
+     * @throws {Error} Invalid string format.
+     */
+    static fromString(str: string): ECPoint {
+        const match = str.match(/\(([0-9A-Fa-f]+)\, ([0-9A-Fa-f]+)\)/);
+
+        if (!match) {
+            throw new Error('Invalid string format');
+        }
+
+        return new ECPoint(BigInt('0x' + match[1]), BigInt('0x' + match[2]));
+    }
 }
