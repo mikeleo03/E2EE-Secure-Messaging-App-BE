@@ -1,4 +1,4 @@
-import * as crypto from 'crypto';
+import * as CryptoJS from 'crypto-js';
 import { Block64 } from '../models/Blocks/Block64';
 import { fisherYatesShuffler } from './fisher-yates';
 import { Block128 } from '../models/Blocks/Block128';
@@ -10,9 +10,8 @@ import { Block128 } from '../models/Blocks/Block128';
  * @returns {string}
  */
 function hmacSHA256(data: string, key: string): string {
-    const hmac = crypto.createHmac('sha256', key);
-    hmac.update(data);
-    return hmac.digest('hex');
+    const hmac = CryptoJS.HmacSHA256(data, key);
+    return hmac.toString(CryptoJS.enc.Hex);
 }
 
 /**
