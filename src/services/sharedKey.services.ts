@@ -1,11 +1,7 @@
 import {db} from '../database';
 import {SharedKey} from '../models';
-import { generateKeyPair, computeSharedSecret, deriveKeys } from '../algorithms/ECDH/ECDHUtils';
-import { EllipticCurve, ECPoint } from '../algorithms/ECC/EllipticCurve';
-import { saveKeyToFile, readKeyFromFile, saveKeyPairToFile, readKeyPairFromFile } from '../algorithms/Utils/Storage';
 
 const sharedKeyRepository = db.getRepository(SharedKey);
-const curve = new EllipticCurve();
 
 const getSharedKeyByUser = async (user_id: string) => {
     return await sharedKeyRepository.find({
@@ -15,24 +11,12 @@ const getSharedKeyByUser = async (user_id: string) => {
     });
 };
 
-const generateSharedKey = async (params: {
+const storeSharedKey = async (params: {
     username: string;
+    sharedX: string;
+    sharedY: string;
 }) => {
     try {
-        // Generate the key between user and server
-        // User's key pair
-        const userKeys = generateKeyPair(curve);
-
-        // Server's key pair
-        const serverKeys = generateKeyPair(curve);
-
-        // Compute shared secrets
-        const userSharedSecret = computeSharedSecret(userKeys.privateKey, serverKeys.publicKey, curve);
-        const userServerSharedSecret = computeSharedSecret(serverKeys.privateKey, userKeys.publicKey, curve);
-
-        // Save User's shared key to a file
-        saveKeyPairToFile(userServerSharedSecret.x, userServerSharedSecret.y, "keys/" + params.username + ".ecshared");
-
         // Save Server's shared key to database
         // First check whether there's sharedkey in the repo
         const sharedKey = await sharedKeyRepository.findOne({
@@ -45,8 +29,8 @@ const generateSharedKey = async (params: {
             // If not, save it
             await sharedKeyRepository.save({
                 user_id: params.username,
-                sharedX: userServerSharedSecret.x.toString(),
-                sharedY: userServerSharedSecret.y.toString(),
+                sharedX: params.sharedX,
+                sharedY: params.sharedY,
                 stored_datetime: new Date()
             });
         } else {
@@ -54,16 +38,10 @@ const generateSharedKey = async (params: {
             await sharedKeyRepository.update({
                 user_id: params.username,
             }, {
-                sharedX: userServerSharedSecret.x.toString(),
-                sharedY: userServerSharedSecret.y.toString(),
+                sharedX: params.sharedX,
+                sharedY: params.sharedY,
                 stored_datetime: new Date()
             });
-        }
-
-        if (userSharedSecret.x === userServerSharedSecret.x && userSharedSecret.y === userServerSharedSecret.y) {
-            console.log(`🟩 Shared key with ${params.username} succesfully generated and validated.`);
-        } else {
-            console.log(`🟥 Shared key with ${params.username} generation and validation failed.`);
         }
 
         return 200;
@@ -93,6 +71,6 @@ const deleteSharedKey = async (params: {user_id: string}) => {
 
 export default {
     getSharedKeyByUser,
-    generateSharedKey,
+    storeSharedKey,
     deleteSharedKey,
 };

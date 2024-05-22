@@ -21,15 +21,17 @@ const getSharedKeyByUser: RequestHandler = async (
     }
 };
 
-const generateSharedKey: RequestHandler = async (
-    req: RequestWithBody<{ username: string }>,
+const storeSharedKey: RequestHandler = async (
+    req: RequestWithBody<{ username: string; sharedX: string; sharedY: string; }>,
     res
 ) => {
-    const { username } = req.body;
+    const { username, sharedX, sharedY } = req.body;
 
     try {
-        const response = await sharedKeyServices.generateSharedKey({
+        const response = await sharedKeyServices.storeSharedKey({
             username: username,
+            sharedX: sharedX,
+            sharedY: sharedY,
         });
 
         res.json(response);
@@ -59,6 +61,6 @@ const deleteSharedKey: RequestHandler = async (
 
 export default {
     getSharedKeyByUser,
-    generateSharedKey,
+    storeSharedKey,
     deleteSharedKey,
 };
