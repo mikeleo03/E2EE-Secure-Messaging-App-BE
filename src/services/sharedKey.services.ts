@@ -4,7 +4,7 @@ import {SharedKey} from '../models';
 const sharedKeyRepository = db.getRepository(SharedKey);
 
 const getSharedKeyByUser = async (user_id: string) => {
-    return await sharedKeyRepository.find({
+    return await sharedKeyRepository.findOne({
         where: {
             user_id: user_id,
         },

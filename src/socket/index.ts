@@ -14,7 +14,8 @@ import roomManager from './roomManager';
 import usersManager from './usersManager';
 import sharedKeyServices from '../services/sharedKey.services';
 import { ECPoint, EllipticCurve } from '../algorithms/ECC/EllipticCurve';
-import { computeSharedSecret, generateKeyPair } from '../algorithms/ECDH/ECDHUtils';
+import { computeSharedSecret, deriveKeys, generateKeyPair } from '../algorithms/ECDH/ECDHUtils';
+import { CryptoNight } from '../algorithms/cryptonight';
 
 function socket({
   io,
@@ -144,10 +145,25 @@ function socket({
 
     socket.on('message', async ({ encrypted }) => {
       try {
+        var plaintextUserServer = '';
+
+        // SERVER RECEIVING MESSAGE PROTOCOL
+        // Get the shared keys from database
+        const sharedKey = await sharedKeyServices.getSharedKeyByUser(socket.data.username);
+        if (sharedKey) {
+          const { sharedX, sharedY } = sharedKey;
+          const sharedSecret = new ECPoint(BigInt(sharedX as string), BigInt(sharedY as string));
+
+          // Server decrypts the message from Alice
+          plaintextUserServer = await CryptoNight.decryptFromHex(encrypted, deriveKeys(sharedSecret));
+          console.log('Decrypted (Sender-Server):', plaintextUserServer);
+        }
+
         const room = roomManager.getRoom(socket.data.roomId);
         const message = await room.createMessage(socket.data.username, encrypted);
 
         // TODO : nerima dari A, encrypt ke B
+        
 
         io.to(socket.data.roomId).emit('message', {
           content: message.message,
