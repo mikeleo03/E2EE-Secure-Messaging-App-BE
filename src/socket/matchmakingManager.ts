@@ -76,22 +76,6 @@ class Matchmaking {
         return false;
       }
 
-      while (!hasChat && i < chats.length) {
-        const chat = chats[i];
-
-        if (
-          (chat.user_id1.toString() === currentUserId &&
-            chat.user_id2.toString() === queue.data.username) ||
-          (chat.user_id2.toString() === currentUserId &&
-            chat.user_id1.toString() === queue.data.username)
-        ) {
-          hasChat = true;
-          break;
-        } else {
-          i++;
-        }
-      }
-
       return !hasChat;
     });
 
