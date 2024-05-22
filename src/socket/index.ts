@@ -160,15 +160,24 @@ function socket({
         }
 
         const room = roomManager.getRoom(socket.data.roomId);
-        const message = await room.createMessage(socket.data.username, encrypted);
+        // const message = await room.createMessage(socket.data.username, encrypted);
 
-        // TODO : nerima dari A, encrypt ke B
-        
+        // SERVER SENDING MESSAGE PROTOCOL
+        // Get the shared keys from database
+        const username2 = room.users[1];
+        const name2 = room.getUsersName(username2)
+        const sharedKey2 = await sharedKeyServices.getSharedKeyByUser(name2);
+        if (sharedKey2) {
+          const { sharedX, sharedY } = sharedKey2;
+          const sharedSecret2 = new ECPoint(BigInt(sharedX as string), BigInt(sharedY as string));
 
-        io.to(socket.data.roomId).emit('message', {
-          content: message.message,
-          from: socket.id,
-        });
+          // Server sent the message to Receiver using shared secret between Receiver and Server
+          const data = JSON.stringify({ content: plaintextUserServer, from: socket.id });
+          const ciphertextAliceServer = await CryptoNight.encryptToHex(data, deriveKeys(sharedSecret2));
+          console.log('Encrypted (Server-Receiver):', ciphertextAliceServer);
+
+          io.to(socket.data.roomId).emit('message', { encrypted: ciphertextAliceServer });
+        }
       } catch (e) {
         let errorMessage: string;
 

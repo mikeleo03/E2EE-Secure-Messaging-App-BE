@@ -1,5 +1,3 @@
-import { ECPoint } from "../algorithms/ECC/EllipticCurve";
-
 export interface ServerToClientEvents {
   matched: (roomId: string) => void;
   revealName: (payload: {
@@ -8,7 +6,7 @@ export interface ServerToClientEvents {
     username2: string;
     name2: string;
   }) => void;
-  message: (payload: {content: string; from: string}) => void;
+  message: (payload: { encrypted: string }) => Promise<void>;
   messageFail: (payload: {error: string}) => void;
   endChat: (message: string) => void;
   onlineUsers: (onlineUsers: number) => void;
