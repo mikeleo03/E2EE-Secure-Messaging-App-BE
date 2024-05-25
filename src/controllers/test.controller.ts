@@ -1,5 +1,5 @@
 import { Request, RequestHandler } from 'express';
-import { generateBBS } from '../algorithms/BBS/BBS';
+// import { generateBBS } from '../algorithms/BBS/BBS';
 import { decryptMessage, encryptMessage } from '../algorithms/ECC/ECCUtils';
 import { ECPoint } from '../algorithms/ECC/EllipticCurve';
 
