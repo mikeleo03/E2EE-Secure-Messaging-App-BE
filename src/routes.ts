@@ -11,6 +11,7 @@ import usersController from './controllers/users.controller';
 import authMiddleware from './middleware/auth.middleware';
 import cryptoController from './controllers/crypto.controller';
 import sharedKeyController from './controllers/sharedKey.controller';
+import testController from './controllers/test.controller';
 
 const routes = (app: Express) => {
   app.route('/').get((_, res) => {
@@ -129,7 +130,7 @@ const routes = (app: Express) => {
   app
     .route('/test')
     .post(
-      cryptoController.encryptCryptoNightToHex
+      testController.testFunction
     );
 
   app

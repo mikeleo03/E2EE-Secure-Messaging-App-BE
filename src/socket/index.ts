@@ -16,6 +16,7 @@ import sharedKeyServices from '../services/sharedKey.services';
 import { ECPoint, EllipticCurve } from '../algorithms/ECC/EllipticCurve';
 import { computeSharedSecret, deriveKeys, generateKeyPair } from '../algorithms/ECDH/ECDHUtils';
 import { CryptoNight } from '../algorithms/cryptonight';
+import { encryptMessage } from '../algorithms/ECC/ECCUtils';
 
 function socket({
   io,
@@ -160,7 +161,14 @@ function socket({
         }
 
         const room = roomManager.getRoom(socket.data.roomId);
-        // const message = await room.createMessage(socket.data.username, encrypted);
+
+        if (sharedKey) {
+          const { sharedX, sharedY } = sharedKey;
+          const sharedSecret = new ECPoint(BigInt(sharedX as string), BigInt(sharedY as string));
+          const message = await room.createMessage(socket.data.username, encryptMessage(plaintextUserServer, sharedSecret));
+        }
+
+        // TODO: Implement if sharedKey failed
 
         // SERVER SENDING MESSAGE PROTOCOL
         // Get the shared keys from database

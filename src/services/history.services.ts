@@ -1,9 +1,10 @@
+import { decryptMessage } from '../algorithms/ECC/ECCUtils';
+import { ECPoint } from '../algorithms/ECC/EllipticCurve';
 import {db} from '../database';
 import {Chat, Message, Topic} from '../models';
+import sharedKeyServices from './sharedKey.services';
 
-const chatRepository = db.getRepository(Chat);
 const messageRepository = db.getRepository(Message);
-const topicRepository = db.getRepository(Topic);
 
 const getOneHistoryChat = async (params: {
   user_id: string;
@@ -20,6 +21,17 @@ const getOneHistoryChat = async (params: {
       },
     });
 
+    for (let message of messages) {
+      const sharedKey = await sharedKeyServices.getSharedKeyByUser(message.sender_id);
+
+      if (sharedKey) {
+        const {sharedX, sharedY} = sharedKey;
+        const sharedSecret = new ECPoint(BigInt(sharedX as string), BigInt(sharedY as string));
+
+        message.message = decryptMessage(message.message, sharedSecret);
+      }
+    }
+
     return messages;
   } catch (error) {
     console.log(error);
@@ -30,17 +42,30 @@ const getOneHistoryChat = async (params: {
 const getAllHistoryChat = async (params: {user_id: string}) => {
   try {
     const chats = await db.query(`
-      SELECT C.chat_id, C.topic_id, topic_name, message, timestamp
+      SELECT C.chat_id, C.topic_id, topic_name, sender_id, message, timestamp
       FROM chat AS C
       INNER JOIN topic AS T ON C.topic_id = T.topic_id
       INNER JOIN (
-          SELECT chat_id, message, timestamp,
+          SELECT chat_id, sender_id, message, timestamp,
           ROW_NUMBER() OVER (partition by chat_id order by timestamp desc) AS n
           FROM message
       ) AS X ON C.chat_id = X.chat_id
       WHERE n = 1 AND end_datetime IS NOT NULL AND (user_id1 = '${params.user_id}' OR user_id2 = '${params.user_id}')
       ORDER BY timestamp DESC
     `);
+
+    console.log(chats);
+
+    for (let chat of chats) {
+      const sharedKey = await sharedKeyServices.getSharedKeyByUser(chat.sender_id);
+
+      if (sharedKey) {
+        const {sharedX, sharedY} = sharedKey;
+        const sharedSecret = new ECPoint(BigInt(sharedX as string), BigInt(sharedY as string));
+
+        chat.message = decryptMessage(chat.message, sharedSecret);
+      }
+    }
 
     return chats;
   } catch (error) {
