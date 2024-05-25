@@ -50,6 +50,6 @@
         "gts": "^4.0.0",
         "nodemon": "^2.0.19",
         "ts-node": "10.7.0",
-        "typescript": "4.5.2"
+        "typescript": "^5.4.5"
     }
 }
