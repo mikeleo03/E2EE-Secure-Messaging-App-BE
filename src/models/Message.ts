@@ -16,4 +16,16 @@ export class Message {
 
   @Column()
   timestamp: Date;
+
+  @Column()
+  isSigned: boolean;
+
+  @Column()
+  e: string;
+
+  @Column()
+  y: string;
+
+  @Column()
+  scpubkey: string;
 }

@@ -1,5 +1,5 @@
 import { Request, RequestHandler } from 'express';
-import SchnorrSignature from '../algorithms/Schnorr/schnorr_signature';
+import SchnorrSignature from '../algorithms/Schnorr/schnorrSignature';
 import { unicodeToHex } from '../utils/string_converter';
 
 interface RequestWithBody<T> extends Request {
@@ -22,7 +22,11 @@ const testFunction: RequestHandler = async (
     const signature = SchnorrSignature.generateSchnorrSignature(BigInt(hexMessage), privateKey);
     const verified = SchnorrSignature.verifySchnorrSignature(BigInt(hexMessage), signature, publicKey);
 
-    const hexSignature = signature.map((x) => x.toString(16));
+    const hexSignature: {e: string, y: string} = {
+      e: signature[0].toString(16),
+      y: signature[1].toString(16),
+      publicKey: publicKey.toString(16),
+    };
 
     res.status(200).json({ hexSignature, verified });
   } catch (error) {

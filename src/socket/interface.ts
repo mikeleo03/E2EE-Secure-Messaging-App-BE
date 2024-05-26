@@ -6,7 +6,7 @@ export interface ServerToClientEvents {
     username2: string;
     name2: string;
   }) => void;
-  messageReceive: (payload: { encrypted: string }) => Promise<void>;
+  messageReceive: (payload: { encrypted: string, isSigned: boolean, signature: string }) => Promise<void>;
   messageFail: (payload: {error: string}) => void;
   endChat: (message: string) => void;
   onlineUsers: (onlineUsers: number) => void;
@@ -20,7 +20,7 @@ export interface ClientToServerEvents {
   matchmaking: (topicId: string) => Promise<void>;
   matchNotFound: (topicId: string) => void;
   revealName: () => void;
-  message: (payload: { encrypted: string }) => Promise<void>;
+  message: (payload: { encrypted: string, isSigned: boolean }) => Promise<void>;
   endChat: () => void;
   getOnlineUsers: () => void;
   leaveRoom: () => void;

@@ -17,6 +17,9 @@ import { ECPoint, EllipticCurve } from '../algorithms/ECC/EllipticCurve';
 import { computeSharedSecret, deriveKeys, generateKeyPair } from '../algorithms/ECDH/ECDHUtils';
 import { CryptoNight } from '../algorithms/cryptonight';
 import { encryptMessage } from '../algorithms/ECC/ECCUtils';
+import { readKeyFromFile, saveKeyToFile } from '../algorithms/Utils/Storage';
+import SchnorrSignature from '../algorithms/Schnorr/schnorrSignature';
+import { unicodeToHex } from '../utils/string_converter';
 
 function socket({
   io,
@@ -144,7 +147,7 @@ function socket({
       }
     });
 
-    socket.on('message', async ({ encrypted }) => {
+    socket.on('message', async ({ encrypted, isSigned }) => {
       try {
         var plaintextUserServer = '';
 
@@ -162,10 +165,38 @@ function socket({
 
         const room = roomManager.getRoom(socket.data.roomId);
 
+        let privateKey: bigint;
+        let publicKey: bigint;
+        let hexSignature: { e: string, y: string, publicKey: string };
+
+        if (isSigned) {
+          privateKey = readKeyFromFile(`./keys/${socket.data.username}.scprv`);
+          publicKey = readKeyFromFile(`./keys/${socket.data.username}.scpub`);
+
+          if (privateKey === BigInt(-1) || publicKey === BigInt(-1)) {
+            const keys = SchnorrSignature.generateKeyPair();
+            privateKey = keys[0];
+            publicKey = keys[1];
+
+            saveKeyToFile(privateKey, `./keys/${socket.data.username}.scprv`);
+            saveKeyToFile(keys[1], `./keys/${socket.data.username}.scpub`);
+          }
+
+          const hexMessage = "0x" + unicodeToHex(plaintextUserServer);
+
+          const signature = SchnorrSignature.generateSchnorrSignature(BigInt(hexMessage), privateKey);
+          hexSignature = SchnorrSignature.toHexMap(signature, publicKey);
+        } else {
+          publicKey = BigInt(0);
+          hexSignature = { e: '', y: '', publicKey: publicKey.toString(16)};
+        }
+
+        console.log('Signature:', hexSignature);
+
         if (sharedKey) {
           const { sharedX, sharedY } = sharedKey;
           const sharedSecret = new ECPoint(BigInt(sharedX as string), BigInt(sharedY as string));
-          const message = await room.createMessage(socket.data.username, encryptMessage(plaintextUserServer, sharedSecret));
+          await room.createMessage(socket.data.username, encryptMessage(plaintextUserServer, sharedSecret), isSigned, hexSignature, publicKey.toString());
         }
 
         // TODO: Implement if sharedKey failed
@@ -184,7 +215,7 @@ function socket({
           const ciphertextAliceServer = await CryptoNight.encryptToHex(data, deriveKeys(sharedSecret2));
           console.log('Encrypted (Server-Receiver):', ciphertextAliceServer);
 
-          io.to(socket.data.roomId).emit('messageReceive', { encrypted: ciphertextAliceServer });
+          io.to(socket.data.roomId).emit('messageReceive', { encrypted: ciphertextAliceServer, isSigned: isSigned, signature: JSON.stringify(hexSignature) });
         }
       } catch (e) {
         let errorMessage: string;

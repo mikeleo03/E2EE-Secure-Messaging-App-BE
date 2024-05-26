@@ -39,15 +39,19 @@ namespace SchnorrSignature {
         return e === ePrime;
     }
 
-    export function toHexMap(signature: bigint[]): { e: string, y: string } {
+    export function toHexMap(signature: bigint[], publicKey: bigint): { e: string, y: string, publicKey: string } {
         return {
             e: signature[0].toString(16),
             y: signature[1].toString(16),
+            publicKey: publicKey.toString(16),
         };        
     }
 
-    export function fromHexMap(hexSignature: { e: string, y: string }): bigint[] {
-        return [BigInt(`0x${hexSignature.e}`), BigInt(`0x${hexSignature.y}`)];
+    export function fromHexMap(hexSignature: { e: string, y: string, publicKey: string }): { signature: bigint[], publicKey: bigint } {
+        return {
+            signature: [BigInt(`0x${hexSignature.e}`), BigInt(`0x${hexSignature.y}`)],
+            publicKey: BigInt(`0x${hexSignature.publicKey}`),
+        }
     }
 }
 

@@ -55,7 +55,7 @@ class Room {
     }
   }
 
-  async createMessage(sender_id: string, message: string) {
+  async createMessage(sender_id: string, message: string, isSigned: boolean, signature: { e: string, y: string }, scpubkey: string) {
     if (!this.users.includes(sender_id))
       throw Error(`User ${sender_id} not found in chat room`);
 
@@ -63,6 +63,9 @@ class Room {
       chat_id: this.roomId,
       sender_id,
       message,
+      isSigned,
+      signature,
+      scpubkey,
     });
   }
 

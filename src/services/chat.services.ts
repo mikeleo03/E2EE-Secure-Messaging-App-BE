@@ -23,12 +23,19 @@ const createMessage = async (params: {
   chat_id: string;
   sender_id: string;
   message: string;
+  isSigned: boolean;
+  signature: {e: string; y: string};
+  scpubkey: string;
 }) => {
   const newMessage = await messageRepository.save({
     chat_id: params.chat_id,
     sender_id: params.sender_id,
     message: params.message,
     timestamp: new Date(),
+    isSigned: params.isSigned,
+    e: params.signature.e,
+    y: params.signature.y,
+    scpubkey: params.scpubkey,
   });
 
   return newMessage;
