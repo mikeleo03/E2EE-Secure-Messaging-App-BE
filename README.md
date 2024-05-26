@@ -1,55 +1,52 @@
-# Social App - Backend
+# 🗯️🗨️ End-to-end Encryption Messaging App
+> Backend side of End-to-end encryption messaging app created with React Typescript and NodeTS
 
-How to run:
+## General Information
+This app is a secure messaging application that provides application layer security, end-to-end encryption, and digital signatures. It is available for web and mobile-website.
 
-1. Clone this repository
-2. Run `npm i` to install all required dependencies
-3. Setup the configuration in `.env` file (Example in `.env.example`)
-4. Run `npm run dev` to serve
+**Application layer security** is implemented using Elliptic-curve Diffie–Hellman (ECDH) and Block Cipher to protect the communication between the client and the server.
 
-## Git branching
+**End-to-end encryption** is implemented using Elliptic Curve Cryptography (ECC) to ensure that only the sender and intended recipient can read the messages.
 
-Setiap repository akan memiliki 3 branch utama, yaitu master, development, dan production.
-Setiap pembuatan branch baru, buat branch baru dengan base master.
-Format: `<tipe>/<judul>`
+**Digital signatures** are used to verify the authenticity and integrity of messages. They are generated using the Schnorr signature scheme and are based on the content of the message and the signer's private key. Digital signatures can be viewed by the recipient but are not stored with the message. The recipient can also verify that the signature is valid, which proves that the message has not been tampered with and that it came from the claimed sender.
 
-List tipe:
+## 🖥️ &nbsp;Frontend
+Page design, chats, handshake, and sockets for any messaging logic stated on [this repository](https://github.com/mikeleo03/E2EE-Secure-Messaging-App-FE)
 
-- Story, untuk fitur atau use case baru
-- Task, untuk bug fixing, performance improvement, refactor, dsb.
+## ⚙️ &nbsp;How to Compile and Run the Program
+Clone this repository from terminal with this command
+``` bash
+$ git clone https://github.com/mikeleo03/E2EE-Secure-Messaging-App-BE.git
+```
+### Run the application on development server
+Compile and download some required modules by running the following *command*
+``` bash
+$ npm install
+$ npm run dev
+```
+If you do it correctly, and set the environemnt using configuration in `.env` file (Example in `.env.example`), the pogram should be running on localhost:4000. Don't forget to run the frontend side also. Further explanation on how to run the frontend development server stated on [this repository](https://github.com/mikeleo03/E2EE-Secure-Messaging-App-FE)
 
-Judul: gunakan kebab case
+## Available Scripts
+In the project directory, you can run:
 
-Contoh:
+### `npm run dev`
 
-- story/api-attendance
-- story/page-attendance
-- task/improve-sql-performance-on-xxxx-method
+Ths runs the app in the development mode.
 
-Setelah selesai, Pull Request ke master dan wajib minta peer review ke kadiv/wakadiv.
+### `docker-compose up -d`
 
-## Code Styling & Repository
+Ths runs database instance in the docker image.
 
-Sangat dimohon untuk memperhatikan hal-hal berikut:
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console. You can also use the environment by appyling the basic .env configuration on .env.example file.
 
-1. Penamaan variabel, fungsi, dan kelas yang bermakna
-2. Penyingkatan harus mudah ditebak dan masih terbaca
-   - Misalkan, codeStylingAndRepository, terlalu panjang, disingkat menjadi: codeStyleNRepo
-   - Yang Salah: csnr, cdStNrep
-     3.Membuat kelas dengan pascal case (ClassName)
-3. Membuat fungsi dan variable dengan camel case (fungsiDanVariabel)
-4. Membuat folder dengan snake case (folder_styling)
-5. Membuat file dengan kebab case (file-styling.tsx)
-6. Membuat komponen React dan nama filenya dengan pascal case (NamaKomponen)
+## 📸 &nbsp;Screenshots
+![demo1](screenshot/screenshot1.png)
+![demo2](screenshot/screenshot2.jpg)
 
-## Semantic Commit Message
-
-- `feat`: (new feature for the user, not a new feature for build script)
-- `fix`: (bug fix for the user, not a fix to a build script)
-- `docs`: (changes to the documentation)
-- `style`: (formatting, missing semi colons, etc; no production code change)
-- `refactor`: (refactoring production code, eg. renaming a variable)
-- `test`: (adding missing tests, refactoring tests; no production code change)
-- `chore`: (updating grunt tasks etc; no production code change)
-
-## Full SOP can be found here: [SOP Developers](https://docs.google.com/document/d/12Ko3DKYiEBoLxn1Z0gpVBmrNwEv4rm6LfWiPOCkqy00/edit#)
+## 👨‍👨‍👦‍👦  Authors
+| Name                     |   Student ID   |  
+| ------------------------ | -------- |
+| [Austin Gabriel Pardosi](https://github.com/AustinPardosi)          | 13521084 |
+| [Michael Leon Putra Widhi](https://github.com/mikeleo03) | 13521108 |
+| [Farhan Nabil Suryono](https://www.github.com/Altair1618) | 13521114 |

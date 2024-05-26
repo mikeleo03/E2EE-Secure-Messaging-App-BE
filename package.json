@@ -10,9 +10,6 @@
         "lint:clean": "gts clean",
         "compile": "tsc",
         "lint:fix": "gts fix",
-        "prepare": "npm.cmd run compile",
-        "pretest": "npm.cmd run compile",
-        "posttest": "npm.cmd run lint",
         "typeorm": "typeorm-ts-node-commonjs"
     },
     "keywords": [],
