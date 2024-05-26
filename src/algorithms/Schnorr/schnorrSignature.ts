@@ -1,4 +1,4 @@
-import { globalPubKey } from "./global_pub_key";
+import { globalPubKey } from "./globalPubKey";
 import { hash_message } from "./utils";
 import SchnorrSignatureMath from "./math";
 
@@ -37,6 +37,17 @@ namespace SchnorrSignature {
         const ePrime = hash_message(message.toString(), x.toString(), p);
 
         return e === ePrime;
+    }
+
+    export function toHexMap(signature: bigint[]): { e: string, y: string } {
+        return {
+            e: signature[0].toString(16),
+            y: signature[1].toString(16),
+        };        
+    }
+
+    export function fromHexMap(hexSignature: { e: string, y: string }): bigint[] {
+        return [BigInt(`0x${hexSignature.e}`), BigInt(`0x${hexSignature.y}`)];
     }
 }
 
