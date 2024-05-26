@@ -10,7 +10,6 @@ import topicsController from './controllers/topics.controller';
 import usersController from './controllers/users.controller';
 import authMiddleware from './middleware/auth.middleware';
 import cryptoController from './controllers/crypto.controller';
-import testController from './controllers/test.controller';
 import publicKeyDSController from './controllers/publicKeyDS.controller';
 
 const routes = (app: Express) => {
@@ -125,12 +124,6 @@ const routes = (app: Express) => {
       authMiddleware.authBannedUserMiddleware,
       authMiddleware.authMiddleware,
       sessionController.getSession
-    );
-
-  app
-    .route('/test')
-    .post(
-      testController.testFunction
     );
 
   app
