@@ -16,8 +16,15 @@ export function saveKeyToFile(key: bigint, filename: string) {
  * @returns {bigint} The single key point stored on the file.
  */
 export function readKeyFromFile(filename: string): bigint {
-    const keyString = fs.readFileSync(filename, 'utf-8');
-    return BigInt(keyString.trim()); // Convert the string to a bigint
+    // const keyString = fs.readFileSync(filename, 'utf-8');
+    // return BigInt(keyString.trim()); // Convert the string to a bigint
+
+    try {
+        const keyString = fs.readFileSync(filename, 'utf-8');
+        return BigInt(keyString.trim()); // Convert the string to a bigint
+    } catch (error) { // No file found
+        return BigInt(-1);
+    }
 }
 
 /**
